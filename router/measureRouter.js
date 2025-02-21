@@ -1,9 +1,12 @@
 const { Router } = require("express")
-const  {createMeasure,getMeasure,getAllMeasuresAvg,updateMeasure,deleteMeasure} = require("../middlewares/measureMid")
+const  {createMeasure,getMeasure,getAllMeasures,updateMeasure,deleteMeasure,getAllMeasuresAvg} = require("../middlewares/measureMid")
 const measureRouter = Router()
 
 measureRouter.get('/:measureId',getMeasure,(req,res)=>{
     res.status(200).json({message:"OK"})
+})
+measureRouter.get('/all/:userId',getAllMeasures,(req,res)=>{
+    res.status(200).json({message:`Found ${req.measureData.length} measure for user id: ${req.params.userId} `,data: req.measureData})
 })
 // measureRouter.get('/',getAllMeasuresAvg,(req,res)=>{
 //     res.status(200).json({message:"OK"})

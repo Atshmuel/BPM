@@ -21,13 +21,12 @@ async function createMeasure(req,res,next) {
 async function getMeasure(req,res,next) {    
     try {
         if(!req.params.measureId) throw new Error("ID required!.")
-            let sqlQuery ="select * from measures where id=(?)";
+            let sqlQuery ="select * from measures where id=?";
             let queryValues = [req.params.measureId]
             const [data] = await pool.query(sqlQuery,queryValues)
             if(!data.length) throw new Error("Fail to get this measure id.")
             req.measureData = data[0];
             next()
-        
     } catch (error) {
         res.status(400).json({ message: `${error.sqlMessage || error.message}` })
     }
@@ -35,23 +34,38 @@ async function getMeasure(req,res,next) {
 }
 
 async function getAllMeasuresAvg(req,res,next) {
-    //(startDate,endDate)
-    console.log("getAllMeasures");
     try {
-        
+        if(!req.params.measureId) throw new Error("ID required!.")
+            let sqlQuery ="select * from measures where id=?";
+        let queryValues = [req.params.measureId]
+        if(req.body.startDate && req.body.endDate){
+            sqlQuery += " and date between ? and ?"
+            queryValues.push(req.body.startDate,req.body.endDate)
+        }
+            const [data] = await pool.query(sqlQuery,queryValues)
+            if(!data.length) throw new Error("Could not find any measure for this user accrding to your request.")
+            req.measureData = data;
+            next()
     } catch (error) {
-        
+        res.status(400).json({ message: `${error.sqlMessage || error.message}` })
     }
-
 }
 
 async function getAllMeasures(req,res,next) {
-    //(startDate,endDate)
-    console.log("getAllMeasures");
     try {
-        
+        if(!req.params.userId) throw new Error("ID required!.")
+            let sqlQuery ="select * from measures where id=?";
+        let queryValues = [req.params.userId]
+        if(req.body.startDate && req.body.endDate){
+            sqlQuery += " and date between ? and ?"
+            queryValues.push(req.body.startDate,req.body.endDate)
+        }
+            const [data] = await pool.query(sqlQuery,queryValues)
+            if(!data.length) throw new Error("Could not find any measure for this user accrding to your request.")
+            req.measureData = data;        
+            next()
     } catch (error) {
-        
+        res.status(400).json({ message: `${error.sqlMessage || error.message}` })
     }
 
 }
@@ -77,4 +91,4 @@ async function deleteMeasure(req,res,next) {
     }
 
 }
-module.exports = {createMeasure,getMeasure,getAllMeasures,updateMeasure,deleteMeasure}
+module.exports = {createMeasure,getMeasure,getAllMeasures,updateMeasure,deleteMeasure,getAllMeasuresAvg}
