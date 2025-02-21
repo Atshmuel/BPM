@@ -20,6 +20,21 @@ app.use('/user',userRouter)
 app.use('/measure',measureRouter)
 
 
+app.get('/',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname, "public", "home.html"))
+})
+
+app.get('/editPatients',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname, "public", "patientEdit.html"))
+})
+
+app.get('/patientsMeasures',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname, "public", "patientMeasures.html"))
+})
+
+app.get('/allPatients',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname, "public", "allPatients.html"))
+})
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)

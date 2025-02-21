@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPM App - Blood Pressure Measurement</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Side Navigation -->
+    <nav class="sidenav">
+        <div class="menu-label">Home page</div>
+        <div class="sidenav-header">
+
+            <div class="logo">
+                <a href="/" class="nav-link logo">
+                    <i class="fas fa-heartbeat logo-icon"></i>
+                    <span class="logo-text">BPM App</span>
+                </a>
+                </div>
+        </div>
+        
+        <div class="menu-label">Management</div>
+        <ul class="nav-links">
+
+            <li class="nav-item">
+                <a href="/patientsMeasures" class="nav-link">
+                    <i class="fas fa-users nav-icon"></i>
+                    <span>Patient Measurements</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/editPatients" class="nav-link">
+                    <i class="fas fa-user-plus nav-icon"></i>
+                    <span>Add/Edit Patient</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="menu-label">Analytics</div>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="/allPatients" class="nav-link">
+                    <i class="fas fa-file-medical-alt nav-icon"></i>
+                    <span>All Measurements </span>
+                </a>
+            </li>
+        </ul>
+       
+    </nav>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+                <i class="fas fa-heartbeat logo-icon"></i>
+                <span class="logo-text">BPM App</span>
+                    </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Blood Pressure Dashboard</h1>
+                <p class="dashboard-desc">Monitor and analyze patient blood pressure measurements with advanced metrics and real-time insights.</p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-user-md stat-icon"></i>
+                    <h2 class="stat-value">128</h2>
+                    <p class="stat-label">Total Patients</p>
+                </div>
+                
+                <div class="stat-card">
+                    <i class="fas fa-heartbeat stat-icon"></i>
+                    <h2 class="stat-value">65</h2>
+                    <p class="stat-label">Total Measurements</p>
+                </div>
+
+            </div>
+            
+            <div class="quick-actions">
+                <a href="editPatients"><button class="action-btn">
+                    <i class="fas fa-user-plus"></i>
+                    New Patient
+                </button></a>
+                
+                <a href="patientsMeasures">
+                    <button class="action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        New Measure
+                    </button>
+                </a>
+
+            </div>
+        </div>
+    </main>
+    
+  
+</body>
+</html>
