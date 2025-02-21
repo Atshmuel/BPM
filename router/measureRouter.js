@@ -2,15 +2,23 @@ const { Router } = require("express")
 const  {createMeasure,getMeasure,getAllMeasures,updateMeasure,deleteMeasure,getAllMeasuresAvg} = require("../middlewares/measureMid")
 const measureRouter = Router()
 
-measureRouter.get('/:measureId',getMeasure,(req,res)=>{
-    res.status(200).json({message:"OK"})
+
+
+
+
+measureRouter.get('/avg',getAllMeasuresAvg,(req,res)=>{
+    res.status(200).json({message:"Avg data found.",data: req.measureData})
 })
+
 measureRouter.get('/all/:userId',getAllMeasures,(req,res)=>{
     res.status(200).json({message:`Found ${req.measureData.length} measure for user id: ${req.params.userId} `,data: req.measureData})
 })
-// measureRouter.get('/',getAllMeasuresAvg,(req,res)=>{
-//     res.status(200).json({message:"OK"})
-// })
+
+
+measureRouter.get('/:measureId',getMeasure,(req,res)=>{
+    res.status(200).json({message:"Found measure",data:req.measureData})
+})
+
 measureRouter.post('/:userId',createMeasure,(req,res)=>{
     res.status(200).json({message:`Measure has been created successfully, Measure ID: ${req.measureId}`})
 })
