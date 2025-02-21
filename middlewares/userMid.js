@@ -51,7 +51,6 @@ async function updateUser(req,res,next){
         console.log(data);
         if(!data.affectedRows) throw new Error("ID could not be found in the DB.")
         if(data.affectedRows &&  !data.changedRows) throw new Error("No change detected, please provide new name to make the change.")
-        req.changes = data.changedRows;
         next()
     } catch (error) {
         res.status(400).json({ message: `${error.sqlMessage || error.message}` })
@@ -60,9 +59,16 @@ async function updateUser(req,res,next){
 }
 
 async function deleteUser(req,res,next){
-    //(id) 
-console.log("deleteUser");
-    
+try {   
+    if(!req.params.id) throw new Error("ID required!.")
+    let sqlQuery ="Delete from users where id = (?)";
+    let queryValues = [req.params.id]
+    const [data] = await pool.query(sqlQuery,queryValues)
+    if(!data.affectedRows) throw new Error('Could not find this user in the DB.')
+    next()
+} catch (error) {
+    res.status(400).json({ message: `${error.sqlMessage || error.message}` })
+}   
 }
 
 
