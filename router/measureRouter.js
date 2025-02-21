@@ -2,9 +2,9 @@ const { Router } = require("express")
 const  {createMeasure,getMeasure,getAllMeasuresAvg,updateMeasure,deleteMeasure} = require("../middlewares/measureMid")
 const measureRouter = Router()
 
-// measureRouter.get('/:userId',getMeasure,(req,res)=>{
-//     res.status(200).json({message:"OK"})
-// })
+measureRouter.get('/:measureId',getMeasure,(req,res)=>{
+    res.status(200).json({message:"OK"})
+})
 // measureRouter.get('/',getAllMeasuresAvg,(req,res)=>{
 //     res.status(200).json({message:"OK"})
 // })
