@@ -5,7 +5,7 @@ const userRouter = Router()
 userRouter.get('/:id',getUser,(req,res)=>{
     res.status(200).json({message:"OK"})
 })
-userRouter.get('/',getAllUsers,(req,res)=>{
+userRouter.get('/all',getAllUsers,(req,res)=>{
     res.status(200).json({message:"OK"})
 })
 userRouter.post('/',createUser,(req,res)=>{

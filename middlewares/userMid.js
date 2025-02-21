@@ -18,9 +18,16 @@ async function createUser(req,res,next){
 }
 
 async function getUser(req,res,next){
-    //(id) 
-console.log("getUser");
-    
+    try {        
+        if(!req.params.id) throw new Error("ID required!.")
+        let sqlQuery ="select * from users where id=(?)";
+        let queryValues = [req.params.id]
+        const [data] = await pool.query(sqlQuery,queryValues)
+        req.userData = data[0];
+        next()
+    } catch (error) {
+        res.status(400).json({ message: `${error.sqlMessage || error.message}` })
+    }    
 }
 
 async function getAllUsers(req,res,next){
