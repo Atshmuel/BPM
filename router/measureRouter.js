@@ -2,7 +2,7 @@ const { Router } = require("express")
 const  {createMeasure,getMeasure,getAllMeasures,updateMeasure,deleteMeasure} = require("../middlewares/measureMid")
 const measureRouter = Router()
 
-measureRouter.get('/',getMeasure,(req,res)=>{
+measureRouter.get('/:id',getMeasure,(req,res)=>{
     res.status(200).json({message:"OK"})
 })
 measureRouter.get('/',getAllMeasures,(req,res)=>{
@@ -11,10 +11,10 @@ measureRouter.get('/',getAllMeasures,(req,res)=>{
 measureRouter.post('/',createMeasure,(req,res)=>{
     res.status(200).json({message:"OK"})
 })
-measureRouter.patch('/',updateMeasure,(req,res)=>{
+measureRouter.patch('/:id',updateMeasure,(req,res)=>{
     res.status(200).json({message:"OK"})
 })
-measureRouter.delete('/',deleteMeasure,(req,res)=>{
+measureRouter.delete('/:id',deleteMeasure,(req,res)=>{
     res.status(200).json({message:"OK"})
 })
 

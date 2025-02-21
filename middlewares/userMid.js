@@ -2,8 +2,18 @@ const {pool} = require('../db/dbConnection')
 
 
 async function createUser(req,res,next){
-    //(fullName) 
-console.log("createUser");
+    try {
+        if(!req.body.fullName || req.body.fullName.split(' ').length < 2)   throw new Error("Name is not allowed, you must provide name with minimun of Two letters.")
+        let sqlQuery ="insert into users (full_name) values (?)";
+        let queryValues = [req.body.fullName]
+        const [data] = await pool.query(sqlQuery,queryValues)
+        
+        req.userId = data.insertId;
+        next()
+    } catch (error) {
+        res.status(400).json({ message: `${error.sqlMessage || error.message}` })
+    }
+   
     
 }
 
