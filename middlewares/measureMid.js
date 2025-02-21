@@ -71,10 +71,23 @@ async function getAllMeasures(req,res,next) {
 }
 
 async function updateMeasure(req,res,next) {
-     //id
-    console.log("updateMeasure");
     try {
-        
+        try {   
+            if(!req.params.measureId || isNaN(+req.params.measureId)) throw new Error("Measure id required!.")
+            if(!req.body.syst || isNaN(+req.body.syst)) throw new Error("Systolic must be provided and needs to be a positive number")
+            if(!req.body.dias || isNaN(+req.body.dias) ) throw new Error("Diastolic must be provided and needs to be a positive number")
+            if(!req.body.pulse || isNaN(+req.body.pulse)) throw new Error("Pulse must be provided and needs to be a positive number")
+                
+            let sqlQuery ="update measures set syst_high=?, dias_low=?, pulse=? where id = ?"
+            let queryValues = [+req.body.syst,+req.body.dias,+req.body.pulse,+req.params.measureId]
+            const [data] = await pool.query(sqlQuery,queryValues)
+            console.log(data);
+            if(!data.affectedRows) throw new Error("ID could not be found in the DB.")
+            if(data.affectedRows &&  !data.changedRows) throw new Error("No changes detected, please provide new data to make the change.")
+            next()
+        } catch (error) {
+            res.status(400).json({ message: `${error.sqlMessage || error.message}` })
+        }   
     } catch (error) {
         
     }

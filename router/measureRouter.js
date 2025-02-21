@@ -14,11 +14,11 @@ measureRouter.get('/all/:userId',getAllMeasures,(req,res)=>{
 measureRouter.post('/:userId',createMeasure,(req,res)=>{
     res.status(200).json({message:`Measure has been created successfully, Measure ID: ${req.measureId}`})
 })
-// measureRouter.patch('/:id',updateMeasure,(req,res)=>{
-//     res.status(200).json({message:"OK"})
-// })
-// measureRouter.delete('/:id',deleteMeasure,(req,res)=>{
-//     res.status(200).json({message:"OK"})
-// })
+measureRouter.patch('/:measureId',updateMeasure,(req,res)=>{
+    res.status(200).json({message:"Updated successfully"})
+})
+measureRouter.delete('/:measureId',deleteMeasure,(req,res)=>{
+    res.status(200).json({message:"Deleted successfully"})
+})
 
 module.exports = { measureRouter }
