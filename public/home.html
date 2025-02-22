@@ -6,6 +6,7 @@
     <title>BPM App - Blood Pressure Measurement</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="index.js" defer></script>
 </head>
 <body>
     <!-- Side Navigation -->
@@ -72,13 +73,13 @@
             <div class="stats-container">
                 <div class="stat-card">
                     <i class="fas fa-user-md stat-icon"></i>
-                    <h2 class="stat-value">128</h2>
+                    <h2 id="total-patients" class="stat-value">...</h2>
                     <p class="stat-label">Total Patients</p>
                 </div>
                 
                 <div class="stat-card">
                     <i class="fas fa-heartbeat stat-icon"></i>
-                    <h2 class="stat-value">65</h2>
+                    <h2 id="total-measures" class="stat-value">...</h2>
                     <p class="stat-label">Total Measurements</p>
                 </div>
 

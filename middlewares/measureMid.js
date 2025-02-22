@@ -64,7 +64,18 @@ async function getAllMeasuresAvg(req,res,next) {
     }
 }
 
-async function getAllMeasures(req,res,next) {
+async function getAllMeasures(req,res,next){    
+    try {        
+        let sqlQuery ="select * from measures";
+        const [data] = await pool.query(sqlQuery)
+        req.allMeasures = data;
+        next()
+    } catch (error) {
+        res.status(400).json({ message: `${error.sqlMessage || error.message}` })
+    }    
+}
+
+async function getAllMeasuresById(req,res,next) {
     try {
         if(!req.params.userId) throw new Error("ID required!.")
             let sqlQuery ="select * from measures where id=?";
@@ -118,4 +129,4 @@ async function deleteMeasure(req,res,next) {
     }  
 
 }
-module.exports = {createMeasure,getMeasure,getAllMeasures,updateMeasure,deleteMeasure,getAllMeasuresAvg}
+module.exports = {createMeasure,getMeasure,getAllMeasures,getAllMeasuresById,updateMeasure,deleteMeasure,getAllMeasuresAvg}

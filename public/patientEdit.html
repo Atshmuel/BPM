@@ -6,6 +6,8 @@
     <title>BPM App - Blood Pressure Measurement</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="index.js" defer></script>
+
 </head>
 <body>
     <!-- Side Navigation -->
@@ -63,17 +65,68 @@
         <div class="bg-circle bg-circle-1"></div>
         <div class="bg-circle bg-circle-2"></div>
         
-        <div class="main-content">            
+        
+        <div class="main-content">    
+            <div class="form-container">
+                <h2 class="form-title">Add New Patient</h2>
+                <form onsubmit="handleCreateSubmit(event)">
+                    <div class="form-group">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <input 
+                            type="text" 
+                            id="fullname" 
+                            name="fullname" 
+                            class="form-input" 
+                            placeholder="Enter patient's full name (example: Jhon Doe)"
+                            required
+                        >
+                        <span class="input-error"></span>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Add Patient
+                    </button>
+                </form>
+            </div>
+        
+
+            <!-- <div  class="form-container">
+                <h2 class="form-title">Edit Patient</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="select-user" class="form-label">Select Patient</label>
+                        <select id="select-user" name="select-user" class="form-select" required>
+                            <option value="" disabled selected>Choose a patient</option>
+                            <option value="1">John Doe</option>
+                            <option value="2">Jane Smith</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-fullname" class="form-label">New Full Name</label>
+                        <input 
+                            type="text" 
+                            id="new-fullname" 
+                            name="new-fullname" 
+                            class="form-input" 
+                            placeholder="Enter new full name"
+                            required
+                        >
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i>
+                        Update Patient
+                    </button>
+                </form>
+            </div> -->
             <div class="quick-actions">
-                <button class="action-btn">
+                <button class="action-btn primary">
                     <i class="fas fa-user-plus"></i>
                     New Patient
                 </button>
-                <button class="action-btn">
-                    <i class="fas fa-plus-circle"></i>
-                    New Measure
+                <button class="action-btn secondary">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                     Edit Patient
                 </button>
-
             </div>
         </div>
     </main>
