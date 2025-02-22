@@ -259,7 +259,7 @@ main {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: auto;
     width: 100%;
 }
 
@@ -455,12 +455,124 @@ main {
     margin-top: 2rem;
 }
 
-.input-error{
+.input-error,.input-success{
     color: var(--accent);
     font-size: 0.8rem;
     padding-left: 0.5rem;
 }
 
+.input-success{
+    color:var(--primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+/* Table Styles */
+.patients-table-container {
+    max-height: 300px; /* Set a max height */
+    overflow-y: auto; /* Make the table scrollable vertically */
+    display: block;
+}
+
+.patients-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    table-layout: fixed; /* Optional: Ensure all columns have the same width */
+}
+
+.patients-table th {
+    background: var(--primary-dark);
+    backdrop-filter: blur(20rem);
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--light);
+    border-bottom: 1px solid var(--glass);
+    position: sticky;
+    top: 0; /* Make header stick to the top of the table */
+    z-index: 1; /* Ensures header stays on top when scrolling */
+}
+
+.patients-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--glass);
+}
+
+.patients-table tr:last-child td {
+    border-bottom: none;
+}
+
+.patients-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.patients-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* Delete Button */
+.delete-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 107, 129, 0.2);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.delete-btn:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--light);
+    opacity: 0.7;
+}
+
+/* Unified Content Container */
+.content-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    width: 100%;
+    margin: 2rem 0;
+    border: 1px solid var(--glass);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.content-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.content-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.content-description {
+    color: var(--light);
+    opacity: 0.8;
+}
+
+/* Container spacing */
+.content-container + .content-container {
+    margin-top: 1rem;
+}
 /* Animations */
 @keyframes float {
     0% {

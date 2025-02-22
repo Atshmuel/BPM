@@ -48,11 +48,10 @@ async function updateUser(req,res,next){
         let sqlQuery ="update users set full_name = ? where id = ?";
         let queryValues = [req.body.fullName.trim(),req.params.id]
         const [data] = await pool.query(sqlQuery,queryValues)
-        console.log(data);
         if(!data.affectedRows) throw new Error("ID could not be found in the DB.")
         if(data.affectedRows &&  !data.changedRows) throw new Error("No change detected, please provide new name to make the change.")
         next()
-    } catch (error) {
+    } catch (error) {        
         res.status(400).json({ message: `${error.sqlMessage || error.message}` })
     }   
     

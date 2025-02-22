@@ -25,17 +25,16 @@
         
         <div class="menu-label">Management</div>
         <ul class="nav-links">
-
             <li class="nav-item">
                 <a href="/patientsMeasures" class="nav-link">
                     <i class="fas fa-users nav-icon"></i>
-                    <span>Patient Measurements</span>
+                    <span>Add/Review Patient Measurements</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="/editPatients" class="nav-link">
                     <i class="fas fa-user-plus nav-icon"></i>
-                    <span>Add/Edit Patient</span>
+                    <span>Manage Patients</span>
                 </a>
             </li>
         </ul>
@@ -67,9 +66,13 @@
         
         
         <div class="main-content">    
-            <div class="form-container">
-                <h2 class="form-title">Add New Patient</h2>
-                <form onsubmit="handleCreateSubmit(event)">
+            <div class="content-container">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Patient</h2>
+                    <p class="content-description">Enter patient details below</p>
+                </div>
+                
+                <form>
                     <div class="form-group">
                         <label for="fullname" class="form-label">Full Name</label>
                         <input 
@@ -77,10 +80,10 @@
                             id="fullname" 
                             name="fullname" 
                             class="form-input" 
-                            placeholder="Enter patient's full name (example: Jhon Doe)"
+                            placeholder="Enter patient's full name"
                             required
                         >
-                        <span class="input-error"></span>
+                        <span class="input-error">Please enter a valid full name</span>
                     </div>
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-user-plus"></i>
@@ -88,36 +91,7 @@
                     </button>
                 </form>
             </div>
-        
-
-            <!-- <div  class="form-container">
-                <h2 class="form-title">Edit Patient</h2>
-                <form>
-                    <div class="form-group">
-                        <label for="select-user" class="form-label">Select Patient</label>
-                        <select id="select-user" name="select-user" class="form-select" required>
-                            <option value="" disabled selected>Choose a patient</option>
-                            <option value="1">John Doe</option>
-                            <option value="2">Jane Smith</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="new-fullname" class="form-label">New Full Name</label>
-                        <input 
-                            type="text" 
-                            id="new-fullname" 
-                            name="new-fullname" 
-                            class="form-input" 
-                            placeholder="Enter new full name"
-                            required
-                        >
-                    </div>
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-save"></i>
-                        Update Patient
-                    </button>
-                </form>
-            </div> -->
+           
             <div class="quick-actions">
                 <button class="action-btn primary">
                     <i class="fas fa-user-plus"></i>
@@ -126,6 +100,10 @@
                 <button class="action-btn secondary">
                     <i class="fa-solid fa-pen-to-square"></i>
                      Edit Patient
+                </button>
+                <button class="action-btn secondary">
+                    <i class="fa-solid fa-trash"></i>
+                     Delete Patient
                 </button>
             </div>
         </div>
