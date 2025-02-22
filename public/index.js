@@ -2,22 +2,26 @@
 const getUserById = async (userId)=>{    
     try {
         const res = await fetch(`/user/${userId}`)
-        if(!res.ok) throw new Error("Failed to fecth")
-            const data = await res.json()   
+        if(!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }            const data = await res.json()   
             return data
     } catch (error) {
-        console.log(error);
+        alert(error.message)
     }
 }
-
 const getAllUsers = async ()=>{
     try {
         const res = await fetch('/user/all')
-        if(!res.ok) throw new Error("Failed to fecth")
-            const data = await res.json()       
+        if(!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }
+                    const data = await res.json()       
          return data
     } catch (error) {
-        console.log(error);
+        alert(error.message)
         
     }
 
@@ -31,12 +35,13 @@ const createUser = async (fullName)=>{
               },
               body: JSON.stringify({fullName})
         })
-        
-            if(!res.ok) throw new Error("Failed to fecth")
-            const data = await res.json()   
+        if(!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }            const data = await res.json()   
             return data
     } catch (error) {
-        alert(error)
+        alert(error.message)
     }
 }
 const updateUser = async (id,newFullName)=>{
@@ -55,11 +60,28 @@ const updateUser = async (id,newFullName)=>{
             const data = await res.json()   
             return data
     } catch (error) {
-        alert(error)
+        alert(error.message)
     }
 
 }
-const deleteUser = async (userId)=>{}
+const deleteUser = async (userId)=>{
+    try {
+        const res = await fetch(`/user/${userId}`,{
+            method:'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+              },
+        })
+            if(!res.ok) {
+                const error = await res.json()
+                throw new Error(error.message)
+            }
+            const data = await res.json()   
+            return data
+    } catch (error) {
+        alert(error.message)
+    }
+}
 //Measure functions
 const getAllMeasuresAvg = async (startDate,endDate)=>{}
 const getAllUserMeasures = async (userId,startDate,endDate)=>{}
@@ -105,8 +127,10 @@ if(window.location.pathname === '/'){
     getData()
 }
 
+let patients = []
 
-const  handleCreateSubmit = async (e)=>{
+
+const handleCreateSubmit = async (e)=>{
     e.preventDefault();
     const input = e.target.querySelector('.form-input')
 
@@ -115,12 +139,11 @@ const  handleCreateSubmit = async (e)=>{
              return 
         }
        
-
         e.target.querySelector('.input-error').innerHTML = ""
         
 
     const res  = await createUser(input.value)
-
+    patients = await getAllUsers().then(res=>res.data)
     e.target.querySelector('.input-success').innerHTML = res.message
     input.value = ""
 
@@ -137,15 +160,15 @@ const  handleUpdateSubmit = async (e)=>{
 
     e.target.querySelector('.input-error').innerHTML = ""
 
-
-    const res  = await updateUser(select.value,input.value)
+    const res  = await updateUser(select.value,input.value)    
+    patients = res.data
     e.target.querySelector('.input-success').innerHTML = res.message
     input.value = ""
     await selectUiHandler(res.data);
+
     
 }
-const selectUiHandler = async (patients)=>{
-        
+const selectUiHandler = async ()=>{    
     const selectEl = document.querySelector('.form-select')
     let selectMarkup = `<option value="" disabled selected>Choose a patient</option>`
    patients.forEach(pat=>{
@@ -155,48 +178,52 @@ const selectUiHandler = async (patients)=>{
     selectEl.innerHTML = ""
     selectEl.insertAdjacentHTML("afterbegin",selectMarkup)   
 }
-const handleTableUi = async (patients)=>{
-    const table = document.querySelector("#patients-tb")
-    let tableList = ""
-    console.log(patients);
+const handleDeleteUser= async (userId) =>{
+   const newPatients =  await deleteUser(userId);
+   patients = newPatients.data
+    handleTableUi()
+    document.querySelector('.success').innerHTML = patients?.message
+    setTimeout(()=>{
+    document.querySelector('.success').innerHTML = ""
+    },3000)
     
+}
+const handleTableUi = async ()=>{
+    const table = document.querySelector("#patients-tb")
+    let tableList = ""    
     patients.forEach(pat=>{
         tableList +=`<tr>
                         <td>${pat.id}</td>
                             <td>${pat.full_name}</td>
                             <td>
-                                <button class="delete-btn" onclick="handleDeleteUser(${pat.id}) >
+                                <button class="delete-btn" onclick="handleDeleteUser(${pat.id})">
                                     <i class="fas fa-trash"></i>
                                     Delete
                                 </button>
                             </td>
-                        </tr>`
-                    })
-                    
+                        </tr>
+                        `
+                    })   
   table.innerHTML ="";
   table.insertAdjacentHTML('afterbegin',tableList)
-    
-    
-
-
-    
 }
 
-if(window.location.pathname === '/editPatients'){
-    
-    const formContainer = document.querySelector('.content-container')
-    const loadPage = async ()=> {
-        const patients = await getAllUsers()
+if(window.location.pathname === '/editPatients'){  
+
+    const getData = async ()=> {
+        patients = await getAllUsers().then(res=>res.data)
+        
+        const formContainer = document.querySelector('.content-container')
         const btns = document.querySelectorAll('.action-btn')
 
-        btns[0].addEventListener('click',()=>{
+        btns[0].addEventListener('click',async ()=>{
             const markup = `
                     <div class="content-header">
                         <h2 class="content-title">Add New Patient</h2>
                         <p class="content-description">Enter patient details below</p>
                     </div>
                     
-                    <form>
+                    <form onsubmit="handleCreateSubmit(event)">
                         <div class="form-group">
                             <label for="fullname" class="form-label">Full Name</label>
                             <input 
@@ -208,6 +235,8 @@ if(window.location.pathname === '/editPatients'){
                                 required
                             >
                             <span class="input-error">Please enter a valid full name</span>
+                <span class="input-success"></span>
+
                         </div>
                         <button type="submit" class="submit-btn">
                             <i class="fas fa-user-plus"></i>
@@ -217,16 +246,15 @@ if(window.location.pathname === '/editPatients'){
             `
                     formContainer.innerHTML = "";
     
-            formContainer.insertAdjacentHTML("afterbegin",markup)
-    
+            formContainer.insertAdjacentHTML("afterbegin",markup)    
             btns[0].className = "action-btn primary";
             btns[1].className = "action-btn secondary";
             btns[2].className = "action-btn secondary";
     
         })
         btns[1].addEventListener('click',async ()=>{
-    let markup = "";
-            if(!patients?.data?.length) {
+        let markup = "";        
+            if(!patients?.length) {
                 markup =   `<div class="table-container">
                               <div class="empty-state">
                                   <i class="fas fa-users fa-2x"></i>
@@ -270,8 +298,8 @@ if(window.location.pathname === '/editPatients'){
             }
             formContainer.innerHTML = "";
             formContainer.insertAdjacentHTML("afterbegin",markup)   
-            if(patients?.data?.length){
-                await selectUiHandler(patients.data) 
+            if(patients?.length){                
+                await selectUiHandler() 
             }
             btns[0].className = "action-btn secondary";
             btns[1].className = "action-btn primary";
@@ -279,7 +307,7 @@ if(window.location.pathname === '/editPatients'){
         })
         btns[2].addEventListener('click',async ()=>{
             let markup =""
-            if(!patients?.data?.length) {
+            if(!patients.length) {
               markup =   `<div class="table-container">
                             <div class="empty-state">
                                 <i class="fas fa-users fa-2x"></i>
@@ -292,8 +320,10 @@ if(window.location.pathname === '/editPatients'){
                 <div class="content-header">
                            <h2 class="content-title">Patient List</h2>
                            <p class="content-description">Manage your registered patients</p>
+                           <span class="success"></span>
                        </div>
                         <div class="patients-table-container">
+
                        <table class="patients-table">
                            <thead>
                                <tr>
@@ -313,8 +343,8 @@ if(window.location.pathname === '/editPatients'){
      
             formContainer.innerHTML = "";
             formContainer.insertAdjacentHTML("afterbegin",markup)   
-            if(patients?.data?.length){
-            await handleTableUi(patients.data)
+            if(patients?.length){
+            await handleTableUi()
             }
             btns[0].className = "action-btn secondary";
             btns[1].className = "action-btn secondary";
@@ -322,5 +352,5 @@ if(window.location.pathname === '/editPatients'){
         })
 
     };
-    loadPage()
+    getData()
 }

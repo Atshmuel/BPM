@@ -455,7 +455,7 @@ main {
     margin-top: 2rem;
 }
 
-.input-error,.input-success{
+.input-error{
     color: var(--accent);
     font-size: 0.8rem;
     padding-left: 0.5rem;
@@ -464,6 +464,14 @@ main {
 .input-success{
     color:var(--primary);
     font-size: 0.8rem;
+    font-weight: 600;
+    padding-left: 0.5rem;
+}
+.success{
+    display: block;
+    color:var(--secondary);
+    font-size: 1.1rem;
+    margin: .3rem;
     font-weight: 600;
 }
 /* Table Styles */

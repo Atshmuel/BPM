@@ -72,7 +72,7 @@
                     <p class="content-description">Enter patient details below</p>
                 </div>
                 
-                <form>
+                <form onsubmit="handleCreateSubmit(event)">
                     <div class="form-group">
                         <label for="fullname" class="form-label">Full Name</label>
                         <input 
@@ -84,6 +84,8 @@
                             required
                         >
                         <span class="input-error">Please enter a valid full name</span>
+                <span class="input-success"></span>
+
                     </div>
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-user-plus"></i>

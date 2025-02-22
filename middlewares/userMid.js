@@ -66,7 +66,13 @@ try {
     if(!data.affectedRows) throw new Error('Could not find this user in the DB.')
     next()
 } catch (error) {
-    res.status(400).json({ message: `${error.sqlMessage || error.message}` })
+    if(error.sqlMessage){
+        res.status(400).json({ message: `Can't delete the user because he have a measures in the db, please delete all his measures first to be able to delete the user` })
+
+    }else {
+        res.status(400).json({ message: `${error.message}` })
+
+    }
 }   
 }
 

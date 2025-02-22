@@ -11,8 +11,8 @@ userRouter.get('/:id',getUser,(req,res)=>{
     res.status(200).json({message:"Found user by id",data:req.userData})
 })
 
-userRouter.post('/',createUser,(req,res)=>{
-    res.status(200).json({message:`${req.body.fullName}'s has been created and stored in rowID: ${req.userId}.`})
+userRouter.post('/',createUser,getAllUsers,(req,res)=>{
+    res.status(200).json({message:`${req.body.fullName}'s has been created and stored in rowID: ${req.userId}.`,data:req.allUsers})
 })
 userRouter.patch('/:id',updateUser,getAllUsers,(req,res)=>{
     res.status(200).json({message:"User name has been changed successfully.",data:req.allUsers})
