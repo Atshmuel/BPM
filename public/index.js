@@ -97,17 +97,18 @@ const getAllMeasures = async ()=>{
 
 }
 const getMeasureById = async (measureId)=>{}
-const createMeasure = async (userId,syst,dias,pulse)=>{
+const createMeasure = async (values)=>{
+
     try {
-        const res = await fetch(`/measure/${userId}`,{
+        const res = await fetch(`/measure/${values.userId}`,{
             method:'POST',
             headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(syst,dias,pulse)
+              body: JSON.stringify(values)
         })
             if(!res.ok) throw new Error("Failed to fecth")
-            const data = await res.json()   
+            const data = await res.json()           
             return data
     } catch (error) {
         console.log(error);
@@ -128,8 +129,19 @@ if(window.location.pathname === '/'){
 }
 
 let patients = []
+const selectUiHandler = async ()=>{    
+    const selectEl = document.querySelector('.form-select')
+    let selectMarkup = `<option value="" disabled selected>Choose a patient</option>`
+   patients.forEach(pat=>{
+        selectMarkup +=`<option value="${pat.id}">${pat.full_name}</option>`
+    })
+
+    selectEl.innerHTML = ""
+    selectEl.insertAdjacentHTML("afterbegin",selectMarkup)   
+}
 
 
+//Manage patients page funtions
 const handleCreateSubmit = async (e)=>{
     e.preventDefault();
     const input = e.target.querySelector('.form-input')
@@ -170,16 +182,6 @@ const  handleUpdateSubmit = async (e)=>{
     await selectUiHandler(res.data);
 
     
-}
-const selectUiHandler = async ()=>{    
-    const selectEl = document.querySelector('.form-select')
-    let selectMarkup = `<option value="" disabled selected>Choose a patient</option>`
-   patients.forEach(pat=>{
-        selectMarkup +=`<option value="${pat.id}">${pat.full_name}</option>`
-    })
-
-    selectEl.innerHTML = ""
-    selectEl.insertAdjacentHTML("afterbegin",selectMarkup)   
 }
 const handleDeleteUser= async (userId) =>{
    const newPatients =  await deleteUser(userId);
@@ -357,4 +359,41 @@ if(window.location.pathname === '/editPatients'){
 
     };
     getData()
+}
+const unlockInputs = ()=>{
+    const formGroups = document.querySelectorAll('.form-group')
+    const inputs = document.querySelectorAll('.form-input')
+    const btn = document.querySelector('.submit-btn')
+
+    inputs.forEach((input,i)=>{
+        input.disabled = false;
+        input.value = ""
+        formGroups[i+1].classList.remove('hidden')
+    })
+    btn.disabled = false;
+    btn.classList.remove('hidden')
+}
+const handleCreateMeasure =  async (e)=>{
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const values = {};
+    
+    formData.forEach((value, key) => {
+        values[key] = value;
+    });
+
+    const data = await createMeasure(values)
+
+    document.querySelector('.success').innerHTML = data?.message
+    setTimeout(()=>{
+    document.querySelector('.success').innerHTML = ""
+    },3000)
+    
+}
+if(window.location.pathname === '/patientsMeasures'){
+   const getData = async ()=>{
+    patients = await getAllUsers().then(res=>res.data)
+    await  selectUiHandler()
+   }
+    getData();
 }

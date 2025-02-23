@@ -6,6 +6,8 @@
     <title>BPM App - Blood Pressure Measurement</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="index.js" defer></script>
+
 </head>
 <body>
     <!-- Side Navigation -->
@@ -66,33 +68,36 @@
             <div class="content-container">
                 <div class="content-header">
                     <h2 class="content-title">Add New Measure</h2>
+                    <span class="success"></span>
                 </div>
                 
-                <form onsubmit="handleUpdateSubmit(event)">
+                <form onsubmit="handleCreateMeasure(event)">
                     <div class="form-group">
-                        <label for="select-user" class="form-label">Select Patient</label>
-                        <select id="select-user" name="select-user" class="form-select" required>
+                        <label for="userId" class="form-label">Select Patient</label>
+                        <select id="select-user" name="userId" class="form-select" onchange="unlockInputs()" required>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="systolic" class="form-label">Systolic value</label>
+                    <div class="form-group hidden">
+                        <label for="syst" class="form-label">Systolic value</label>
                         <input 
-                            type="text" 
+                        disabled
+                            type="number" 
                             id="systolic" 
-                            name="systolic" 
-                            class="form-input" 
+                            name="syst" 
+                            class="form-input"
                             placeholder="Enter systolic value"
                             required
                         >
                         <span class="input-error"></span>
                         <span class="input-success"></span>
                     </div>
-                    <div class="form-group">
-                        <label for="diastolic" class="form-label">Diastolic value</label>
+                    <div class="form-group hidden">
+                        <label for="dias" class="form-label">Diastolic value</label>
                         <input 
-                            type="text" 
+                        disabled
+                            type="number" 
                             id="diastolic" 
-                            name="diastolic" 
+                            name="dias" 
                             class="form-input" 
                             placeholder="Enter diastolic value"
                             required
@@ -100,10 +105,11 @@
                         <span class="input-error"></span>
                         <span class="input-success"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group hidden">
                         <label for="pulse" class="form-label">Pulse value </label>
                         <input 
-                            type="text" 
+                        disabled
+                            type="number" 
                             id="pulse" 
                             name="pulse" 
                             class="form-input" 
@@ -114,7 +120,7 @@
                         <span class="input-success"></span>
                     </div>
 
-                    <button type="submit" class="submit-btn">
+                    <button type="submit" disabled class="submit-btn hidden">
                         <i class="fas fa-save"></i>
                         Create Measure
                     </button>

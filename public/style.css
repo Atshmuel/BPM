@@ -393,6 +393,10 @@ main {
     transition: all 0.3s ease;
 }
 
+.hidden{
+    opacity: 0;
+}
+
 .form-input:focus {
     outline: none;
     border-color: var(--primary);
