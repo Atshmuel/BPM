@@ -3,7 +3,7 @@ const  {createMeasure,getMeasure,getAllMeasuresById,getAllMeasures,updateMeasure
 const measureRouter = Router()
 
 
-measureRouter.get('/avg/:userId',getAllMeasuresAvg,(req,res)=>{
+measureRouter.post('/avg/:userId',getAllMeasuresAvg,(req,res)=>{
     res.status(200).json({message:"Avg data found.",data: req.measureData})
 })
 

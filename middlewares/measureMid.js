@@ -42,18 +42,22 @@ async function getAllMeasuresAvg(req,res,next) {
             queryValues.push(req.body.startDate,req.body.endDate)
         }
 
-            sqlQuery+=" group by user_id"
-            const [avgData] = await pool.query(sqlQuery,queryValues)
-            if(!avgData.length) throw new Error("Could not find any measure for this user accrding to your request.")
-                queryValues =[req.params.userId]
-            const [measureData] = await pool.query("select * from measures where user_id = ?",queryValues)
+        sqlQuery+=" group by user_id"
+        const [avgData] = await pool.query(sqlQuery,queryValues)
+        if(!avgData.length) throw new Error("Could not find any measure for this user accrding to your request.")
+        sqlQuery = "select * from measures where user_id = ?";
+        queryValues = [req.params.userId]
+        if(req.body.startDate && req.body.endDate && (isBefore(req.body.startDate,req.body.endDate)|| isSameDay(req.body.endDate,req.body.startDate)) ){
+                    sqlQuery += " and date between ? and ? "
+                    queryValues.push(req.body.startDate,req.body.endDate)
+                }
+                const [measureData] = await pool.query(sqlQuery,queryValues)            
             
-            avgData.forEach(avg=>{
+
                 measureData.forEach(measure=>{
-                        measure.critical = +measure.syst_high > +avg.syst_avg   * 1.2 || +measure.dias_low > +avg.dias_avg   * 1.2 || +measure.pulse > +avg.pulse_avg   * 1.2
-                    
+                        measure.critical = +measure.syst_high > +avgData[0].syst_avg * 1.2 || +measure.dias_low > +avgData[0].dias_avg   * 1.2 || +measure.pulse > +avgData[0].pulse_avg * 1.2
                 })
-            })
+            
             
             req.measureData = measureData;
      

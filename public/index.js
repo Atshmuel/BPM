@@ -83,8 +83,41 @@ const deleteUser = async (userId)=>{
     }
 }
 //Measure functions
-const getAllMeasuresAvg = async (startDate,endDate)=>{}
-const getAllUserMeasures = async (userId,startDate,endDate)=>{}
+const getAllMeasuresAvg = async (userId,startDate,endDate)=>{
+    try {
+        let res;
+        if(startDate && endDate){
+            res = await fetch(`/measure/avg/${userId}`,{
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                  },
+                body: JSON.stringify({startDate,endDate})
+            })
+        }else{
+            res = await fetch(`/measure/avg/${userId}`,{
+                method:'POST'})
+        }
+        if(!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }
+        const data = await res.json() 
+        return data      
+    } catch (error) {
+        alert(error);
+    }
+}
+const getAllUserMeasures = async (userId,startDate,endDate)=>{
+    try {
+        const res = await fetch('/measure/all')
+        if(!res.ok) throw new Error("Failed to fecth")
+            const data = await res.json() 
+        return data      
+    } catch (error) {
+        console.log(error);
+    }
+}
 const getAllMeasures = async ()=>{
     try {
         const res = await fetch('/measure/all')
@@ -130,14 +163,15 @@ if(window.location.pathname === '/'){
 
 let patients = []
 const selectUiHandler = async ()=>{    
-    const selectEl = document.querySelector('.form-select')
+    const selectEl = document.querySelectorAll('.form-select')
     let selectMarkup = `<option value="" disabled selected>Choose a patient</option>`
    patients.forEach(pat=>{
         selectMarkup +=`<option value="${pat.id}">${pat.full_name}</option>`
     })
-
-    selectEl.innerHTML = ""
-    selectEl.insertAdjacentHTML("afterbegin",selectMarkup)   
+    selectEl.forEach(select=>{
+        select.innerHTML = ""
+        select.insertAdjacentHTML("afterbegin",selectMarkup)   
+    })
 }
 
 
@@ -186,7 +220,7 @@ const  handleUpdateSubmit = async (e)=>{
 const handleDeleteUser= async (userId) =>{
    const newPatients =  await deleteUser(userId);
    patients = newPatients.data
-    handleTableUi()
+    handleUserTableUi()
 
     document.querySelector('.success').innerHTML = newPatients?.message
     setTimeout(()=>{
@@ -194,7 +228,7 @@ const handleDeleteUser= async (userId) =>{
     },3000)
     
 }
-const handleTableUi = async ()=>{
+const handleUserTableUi = async ()=>{
     const table = document.querySelector("#patients-tb")
     let tableList = ""    
     patients.forEach(pat=>{
@@ -350,7 +384,7 @@ if(window.location.pathname === '/editPatients'){
             formContainer.innerHTML = "";
             formContainer.insertAdjacentHTML("afterbegin",markup)   
             if(patients?.length){
-            await handleTableUi()
+            await handleUserTableUi()
             }
             btns[0].className = "action-btn secondary";
             btns[1].className = "action-btn secondary";
@@ -362,7 +396,7 @@ if(window.location.pathname === '/editPatients'){
 }
 const unlockInputs = ()=>{
     const formGroups = document.querySelectorAll('.form-group')
-    const inputs = document.querySelectorAll('.form-input')
+    const inputs = document.querySelectorAll('.form-input.create-measure')
     const btn = document.querySelector('.submit-btn')
 
     inputs.forEach((input,i)=>{
@@ -372,6 +406,41 @@ const unlockInputs = ()=>{
     })
     btn.disabled = false;
     btn.classList.remove('hidden')
+}
+const showMeasuresTable = ()=>{
+    let markup =""
+            if(!patients.length) {
+              markup =   `<div class="table-container">
+                            <div class="empty-state">
+                                <i class="fas fa-users fa-2x"></i>
+                                <p>No patients found</p>
+                            </div>
+                        </div>`
+    
+            }else{
+                 markup = `
+                <div class="content-header">
+                           <h2 class="content-title"> List</h2>
+                           <p class="content-description">Manage your registered patients</p>
+                           <span class="success"></span>
+                       </div>
+                        <div class="patients-table-container">
+
+                       <table class="patients-table">
+                           <thead>
+                               <tr>
+                                   <th>ID</th>
+                                   <th>Patient Name</th>
+                                   <th>Actions</th>
+                               </tr>
+                           </thead>
+                           <tbody id="patients-tb">
+                               
+                           </tbody>
+                       </table>
+                       </div>
+               `
+            }
 }
 const handleCreateMeasure =  async (e)=>{
     e.preventDefault()
@@ -390,14 +459,109 @@ const handleCreateMeasure =  async (e)=>{
     },3000)
     
 }
+
+const handleMeasureAvgTable = async ()=>{
+    const searchEl = document.querySelector('.search-select')
+    const inputs = document.querySelectorAll('.search-input')
+const startDate = inputs[0].value
+const endDate = inputs[1].value
+
+if(!searchEl.value) {
+    document.querySelector('.search-error').innerHTML = "Please select patient first"
+    return
+}
+if((!startDate && endDate) || (startDate && !endDate)) {
+    document.querySelector('.search-error').innerHTML = "Must provide bouth Start and End date (range) to make the search"
+    return
+}
+
+
+document.querySelector('.search-error').innerHTML=""
+    const measures = await getAllMeasuresAvg(searchEl.value,startDate,endDate).then(res=>res.data)
+    const table = document.querySelector("#measure-tb")
+    console.log(measures);
+    
+       let markup = ""
+    measures.forEach(measure=>{
+            markup +=`<tr class="${measure.critical ? "crit" : ""}">
+                             <td>${measure.id}</td>
+
+                             <td>${measure.user_id}</td>
+                             <td>${measure.syst_high}</td>
+                             <td>${measure.pulse}</td>
+                             <td>${measure.dias_low}</td>
+                             <td>${measure.date.split('T')[0]}</td>
+                             <td class="table-actions">
+                                 <button class="edit-btn" onclick="handleEditMeasure(${measure.id})">
+                                     <i class="fas fa-pen-to-square"></i>
+                                     Edit
+                                 </button>
+                                 <button class="delete-btn" onclick="HandleDeleteMeasure(${measure.id})">
+                                    <i class="fas fa-trash"></i>
+                                    Delete
+                                </button>
+                             </td>
+                         </tr>`
+    })
+
+table.innerHTML = ""
+    table.insertAdjacentHTML("afterbegin",markup)
+}
 if(window.location.pathname === '/patientsMeasures'){
-   const getData = async ()=>{
-    const btns = document.querySelectorAll('.action-btn')
-    btns[0].addEventListener('click',async ()=>{})
-    btns[1].addEventListener('click',async ()=>{})
-    btns[2].addEventListener('click',async ()=>{})
+const btns = document.querySelectorAll('.action-btn')
+const searchBtn = document.querySelector('.search-btn')
+
+const slider = {
+    currentSlide: 0,
+    slides: document.querySelectorAll('.content-container'),
+    sliderContainer: document.querySelector('.slider'),
+    
+    init() {   
+        
+        btns[0].addEventListener('click', () => this.goToSlide(0));
+        btns[1].addEventListener('click', () => this.goToSlide(1));
+        
+        this.updateSlidePositions();
+        this.updateButtonStates();
+    },
+    
+    goToSlide(index) {
+        if (index !== this.currentSlide) {
+            this.currentSlide = index;
+            this.updateSlidePositions();
+            this.updateButtonStates();
+        }
+    },
+    
+    updateSlidePositions() {
+        this.slides.forEach((slide, index) => {
+            const offset = (index - this.currentSlide) * 100;
+            slide.style.transform = `translateX(${offset}%)`;
+        });
+    },
+    
+    updateButtonStates() {
+        if (this.currentSlide === 0) {            
+            btns[0].classList.add('primary')
+            btns[0].classList.remove('secondary')
+            btns[1].classList.add('secondary')
+            btns[1].classList.remove('primary')
+        }else{
+            btns[1].classList.add('primary')
+            btns[1].classList.remove('secondary')
+            btns[0].classList.add('secondary')
+            btns[0].classList.remove('primary')
+        }
+        
+    }
+};
+
+const getData = async ()=>{
     patients = await getAllUsers().then(res=>res.data)
     await  selectUiHandler()
+    slider.init();
+
    }
     getData();
+
 }
