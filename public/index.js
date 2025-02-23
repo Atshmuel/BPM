@@ -136,6 +136,8 @@ const handleCreateSubmit = async (e)=>{
 
         if(input.value.split(' ').length != 2){
              e.target.querySelector('.input-error').innerHTML = "Please provide full name (two words)"
+            e.target.querySelector('.input-success').innerHTML = ""
+
              return 
         }
        
@@ -155,6 +157,7 @@ const  handleUpdateSubmit = async (e)=>{
 
     if(input.value.split(' ').length != 2){
         e.target.querySelector('.input-error').innerHTML = "Please provide full name (two words)"
+        e.target.querySelector('.input-success').innerHTML = ""
         return 
    }
 
@@ -182,7 +185,8 @@ const handleDeleteUser= async (userId) =>{
    const newPatients =  await deleteUser(userId);
    patients = newPatients.data
     handleTableUi()
-    document.querySelector('.success').innerHTML = patients?.message
+
+    document.querySelector('.success').innerHTML = newPatients?.message
     setTimeout(()=>{
     document.querySelector('.success').innerHTML = ""
     },3000)

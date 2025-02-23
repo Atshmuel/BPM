@@ -165,7 +165,7 @@ main {
     width: 100%;
     max-width: 1000px;
     height: 100%;
-    max-height: 600px;
+    max-height: 700px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
     border: 1px solid var(--glass);
     display: flex;
@@ -370,7 +370,7 @@ main {
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
 }
 
 .form-label {
@@ -476,8 +476,8 @@ main {
 }
 /* Table Styles */
 .patients-table-container {
-    max-height: 300px; /* Set a max height */
-    overflow-y: auto; /* Make the table scrollable vertically */
+    max-height: 400px; 
+    overflow-y: auto; 
     display: block;
 }
 
@@ -485,7 +485,7 @@ main {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    table-layout: fixed; /* Optional: Ensure all columns have the same width */
+    table-layout: fixed; 
 }
 
 .patients-table th {
@@ -496,8 +496,8 @@ main {
     color: var(--light);
     border-bottom: 1px solid var(--glass);
     position: sticky;
-    top: 0; /* Make header stick to the top of the table */
-    z-index: 1; /* Ensures header stays on top when scrolling */
+    top: 0; 
+    z-index: 1; 
 }
 
 .patients-table td {
@@ -551,15 +551,16 @@ main {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 15px;
-    padding: 2rem;
+    padding: 1rem 2rem;
     width: 100%;
+    height: 100%;
     margin: 2rem 0;
     border: 1px solid var(--glass);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .content-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     text-align: center;
 }
 
@@ -626,7 +627,7 @@ main {
     
     .sidenav {
         position: fixed;
-        left: -250px;
+        left: -350px;
         top: 0;
         height: 100vh;
         z-index: 1000;
@@ -640,5 +641,12 @@ main {
         display: block;
         cursor: pointer;
         margin-right: 1rem;
+    }
+    .logo-text{
+        font-size: 1.1rem;
+    }
+    .action-btn{
+        flex-direction: column;
+        font-size: 0.6rem;
     }
 }

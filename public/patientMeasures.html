@@ -63,16 +63,80 @@
         <div class="bg-circle bg-circle-2"></div>
         
         <div class="main-content">            
+            <div class="content-container">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Measure</h2>
+                </div>
+                
+                <form onsubmit="handleUpdateSubmit(event)">
+                    <div class="form-group">
+                        <label for="select-user" class="form-label">Select Patient</label>
+                        <select id="select-user" name="select-user" class="form-select" required>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="systolic" class="form-label">Systolic value</label>
+                        <input 
+                            type="text" 
+                            id="systolic" 
+                            name="systolic" 
+                            class="form-input" 
+                            placeholder="Enter systolic value"
+                            required
+                        >
+                        <span class="input-error"></span>
+                        <span class="input-success"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="diastolic" class="form-label">Diastolic value</label>
+                        <input 
+                            type="text" 
+                            id="diastolic" 
+                            name="diastolic" 
+                            class="form-input" 
+                            placeholder="Enter diastolic value"
+                            required
+                        >
+                        <span class="input-error"></span>
+                        <span class="input-success"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="pulse" class="form-label">Pulse value </label>
+                        <input 
+                            type="text" 
+                            id="pulse" 
+                            name="pulse" 
+                            class="form-input" 
+                            placeholder="Enter pulse value"
+                            required
+                        >
+                        <span class="input-error"></span>
+                        <span class="input-success"></span>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i>
+                        Create Measure
+                    </button>
+                </form>
+            </div>
+           
+            
+
+
             <div class="quick-actions">
-                <button class="action-btn">
-                    <i class="fas fa-user-plus"></i>
-                    New Patient
-                </button>
-                <button class="action-btn">
+                <button class="action-btn primary">
                     <i class="fas fa-plus-circle"></i>
                     New Measure
                 </button>
-
+                <button class="action-btn secondary">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                     Edit Measure
+                </button>
+                <button class="action-btn secondary">
+                    <i class="fa-solid fa-trash"></i>
+                     Delete Measure
+                </button>
             </div>
         </div>
     </main>
