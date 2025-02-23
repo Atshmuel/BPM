@@ -392,6 +392,10 @@ const handleCreateMeasure =  async (e)=>{
 }
 if(window.location.pathname === '/patientsMeasures'){
    const getData = async ()=>{
+    const btns = document.querySelectorAll('.action-btn')
+    btns[0].addEventListener('click',async ()=>{})
+    btns[1].addEventListener('click',async ()=>{})
+    btns[2].addEventListener('click',async ()=>{})
     patients = await getAllUsers().then(res=>res.data)
     await  selectUiHandler()
    }

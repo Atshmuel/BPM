@@ -1,5 +1,5 @@
 const {pool} = require('../db/dbConnection')
-
+const {isBefore, isSameDay} = require('date-fns')
 async function createMeasure(req,res,next) {
     try {   
         if(!req.params.userId) throw new Error("ID required!.")
@@ -35,24 +35,23 @@ async function getMeasure(req,res,next) {
 
 async function getAllMeasuresAvg(req,res,next) {
     try {
-            let sqlQuery = "select user_id,avg(syst_high) as syst_avg,avg(dias_low) as dias_avg ,avg(pulse) as pulse_avg from measures "
-            let queryValues =[]
-        if(req.body.startDate && req.body.endDate){
-            sqlQuery += "where date between ? and ? "
+            let sqlQuery = "select user_id,avg(syst_high) as syst_avg,avg(dias_low) as dias_avg ,avg(pulse) as pulse_avg from measures where user_id = ?"
+            let queryValues =[req.params.userId]
+        if(req.body.startDate && req.body.endDate && (isBefore(req.body.startDate,req.body.endDate)|| isSameDay(req.body.endDate,req.body.startDate)) ){
+            sqlQuery += " and date between ? and ? "
             queryValues.push(req.body.startDate,req.body.endDate)
         }
 
             sqlQuery+=" group by user_id"
             const [avgData] = await pool.query(sqlQuery,queryValues)
             if(!avgData.length) throw new Error("Could not find any measure for this user accrding to your request.")
-
-            const [measureData] = await pool.query("select * from measures")
+                queryValues =[req.params.userId]
+            const [measureData] = await pool.query("select * from measures where user_id = ?",queryValues)
             
             avgData.forEach(avg=>{
                 measureData.forEach(measure=>{
-                    if(+measure.user_id === +avg.user_id){
                         measure.critical = +measure.syst_high > +avg.syst_avg   * 1.2 || +measure.dias_low > +avg.dias_avg   * 1.2 || +measure.pulse > +avg.pulse_avg   * 1.2
-                    }
+                    
                 })
             })
             
@@ -80,7 +79,7 @@ async function getAllMeasuresById(req,res,next) {
         if(!req.params.userId) throw new Error("ID required!.")
             let sqlQuery ="select * from measures where id=?";
         let queryValues = [req.params.userId]
-        if(req.body.startDate && req.body.endDate){
+        if(req.body.startDate && req.body.endDate && (isBefore(req.body.startDate,req.body.endDate)|| isSameDay(req.body.endDate,req.body.startDate)) ){
             sqlQuery += " and date between ? and ?"
             queryValues.push(req.body.startDate,req.body.endDate)
         }
