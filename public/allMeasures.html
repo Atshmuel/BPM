@@ -6,6 +6,8 @@
     <title>BPM App - Blood Pressure Measurement</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="index.js" defer></script>
+
 </head>
 <body>
     <!-- Side Navigation -->
@@ -74,75 +76,47 @@
                     <span class="input-error search-error"></span>
                 </div>
                 <div class="patients-table-container">
-                     <label for="userId" class="form-label">Select Month</label>
-                     <div class="form-group date-picker-group">
-                        <input type="number" min="1" max="12" class="form-input" />
-                        <span class="fake-btn primary search-btn" onclick="handleMeasureAvgTable()">
+                     <label for="userId" class="form-label">Select Month </label>
+                     <form class="form-group date-picker-group" onsubmit="handleMeasuresByMonth(event)">
+                        <input type="number" min="1" max="12" class="form-input" placeholder="Pick a Month (1-12)" />
+                        <button class="action-btn primary search-btn">
                             <i class="fa-solid fa-magnifying-glass" ></i>
                             Search
-                        </span>
-                    </div>
+                        </button>
+                    </form>
     
                 <table class="patients-table">
                     <thead>
                         <tr >
-                            
-                            <th>User</th>
-                            <th>Systolic AVG</th>
-                            <th>Diastolic AVG</th>
-                            <th>Pulse AVG</th>
-                            <th>Total Critcal</th>
+                            <th>Patient name</th>
+                            <th>Systolic AVG (Critcal)</th>
+                            <th>Diastolic AVG (Critcal)</th>
+                            <th>Pulse AVG (Critcal)</th>
                         </tr>
                     </thead>
                     <tbody id="measure-tb">
-                        <!-- <tr class="crit">
-                     <td>User ID</td>
-                     <td>Systolic</td>
-                     <td>Diastolic</td>
-                     <td>Pulse</td>
-                     <td>Date</td>
-                     <td class="table-actions">
-                         <button class="edit-btn" onclick="handleEditMeasure()">
-                             <i class="fas fa-pen-to-square"></i>
-                             Edit
-                         </button>
-                         <button class="delete-btn" onclick="HandleDeleteMeasure()">
-                            <i class="fas fa-trash"></i>
-                            Delete
-                        </button>
-                     </td>
-                 </tr> -->
-                 <!-- <tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""}">
-                    <td>${measure.id}</td>
-                    <td>${measure.user_id}</td>
-                    <td><input type="number" class="form-input" value="${measure.syst_high}" id="syst-${measure.id}"></td>
-                    <td><input type="number" class="form-input" value="${measure.pulse}" id="pulse-${measure.id}"></td>
-                    <td><input type="number" class="form-input" value="${measure.dias_low}" id="dias-${measure.id}"></td>
-                    <td>${measure.date.split('T')[0]}</td>
-                    <td class="table-actions">
-                        <button class="submit-btn" onclick="handleSubmitMeasure(${measure.id})">
-                            <i class="fas fa-check"></i>
-                            Update
-                        </button>
-                    </td>
-                </tr> -->
                     </tbody>
                 </table>
                 </div>
             </div> 
-        </div>
 
             <div class="quick-actions">
-                <button class="action-btn">
+                <a href="editPatients"><button class="action-btn">
                     <i class="fas fa-user-plus"></i>
                     New Patient
-                </button>
-                <button class="action-btn">
-                    <i class="fas fa-plus-circle"></i>
-                    New Measure
-                </button>
+                </button></a>
+                
+                <a href="patientsMeasures">
+                    <button class="action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        New Measure
+                    </button>
+                </a>
 
             </div>
+        </div>
+
+           
         </div>
     </main>
     

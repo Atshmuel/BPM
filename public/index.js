@@ -1,269 +1,282 @@
 //User function
-const getUserById = async (userId)=>{    
+const getUserById = async (userId) => {
     try {
         const res = await fetch(`/user/${userId}`)
-        if(!res.ok) {
+        if (!res.ok) {
             const error = await res.json()
             throw new Error(error.message)
-        }            const data = await res.json()   
-            return data
+        } const data = await res.json()
+        return data
     } catch (error) {
         alert(error.message)
     }
 }
-const getAllUsers = async ()=>{
+const getAllUsers = async () => {
     try {
         const res = await fetch('/user/all')
-        if(!res.ok) {
+        if (!res.ok) {
             const error = await res.json()
             throw new Error(error.message)
         }
-                    const data = await res.json()       
-         return data
+        const data = await res.json()
+        return data
     } catch (error) {
         alert(error.message)
-        
+
     }
 
 }
-const createUser = async (fullName)=>{
+const createUser = async (fullName) => {
     try {
-        const res = await fetch(`/user`,{
-            method:'POST',
+        const res = await fetch(`/user`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({fullName})
+            },
+            body: JSON.stringify({ fullName })
         })
-        if(!res.ok) {
+        if (!res.ok) {
             const error = await res.json()
             throw new Error(error.message)
-        }            const data = await res.json()   
-            return data
+        } const data = await res.json()
+        return data
     } catch (error) {
         alert(error.message)
     }
 }
-const updateUser = async (id,newFullName)=>{
+const updateUser = async (id, newFullName) => {
     try {
-        const res = await fetch(`/user/${id}`,{
-            method:'PATCH',
+        const res = await fetch(`/user/${id}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({fullName:newFullName})
+            },
+            body: JSON.stringify({ fullName: newFullName })
         })
-            if(!res.ok) {
-                const error = await res.json()
-                throw new Error(error.message)
-            }
-            const data = await res.json()   
-            return data
+        if (!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }
+        const data = await res.json()
+        return data
     } catch (error) {
         alert(error.message)
     }
 
 }
-const deleteUser = async (userId)=>{
+const deleteUser = async (userId) => {
     try {
-        const res = await fetch(`/user/${userId}`,{
-            method:'DELETE',
+        const res = await fetch(`/user/${userId}`, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-              },
+            },
         })
-            if(!res.ok) {
-                const error = await res.json()
-                throw new Error(error.message)
-            }
-            const data = await res.json()   
-            return data
+        if (!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }
+        const data = await res.json()
+        return data
     } catch (error) {
         alert(error.message)
     }
 }
 //Measure functions
-const getAllMeasuresAvg = async (userId,startDate,endDate)=>{
+const getAllMeasuresAvg = async (userId, startDate, endDate) => {
     try {
         let res;
-        if(startDate && endDate){
-            res = await fetch(`/measure/avg/${userId}`,{
-                method:'POST',
+        if (startDate && endDate) {
+            res = await fetch(`/measure/avg/${userId}`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                  },
-                body: JSON.stringify({startDate,endDate})
+                },
+                body: JSON.stringify({ startDate, endDate })
             })
-        }else{
-            res = await fetch(`/measure/avg/${userId}`,{
-                method:'POST'})
+        } else {
+            res = await fetch(`/measure/avg/${userId}`, {
+                method: 'POST'
+            })
         }
-        if(!res.ok) {
+        if (!res.ok) {
             const error = await res.json()
             throw new Error(error.message)
         }
-        const data = await res.json()         
-        return data      
+        const data = await res.json()
+        return data
     } catch (error) {
         alert(error);
     }
 }
-const getAllUserMeasures = async (userId,startDate,endDate)=>{
+const getAllUserMeasures = async (userId, startDate, endDate) => {
     try {
         const res = await fetch('/measure/all')
-        if(!res.ok) throw new Error("Failed to fecth")
-            const data = await res.json() 
-        return data      
+        if (!res.ok) throw new Error("Failed to fecth")
+        const data = await res.json()
+        return data
     } catch (error) {
         console.log(error);
     }
 }
-const getAllMeasures = async ()=>{
+const getAllMeasures = async () => {
     try {
         const res = await fetch('/measure/all')
-        if(!res.ok) throw new Error("Failed to fecth")
-            const data = await res.json() 
-        return data      
+        if (!res.ok) throw new Error("Failed to fecth")
+        const data = await res.json()
+        return data
     } catch (error) {
         console.log(error);
     }
 
 }
-const getMeasureById = async (measureId)=>{}
-const createMeasure = async (values)=>{
+const createMeasure = async (values) => {
     try {
-        const res = await fetch(`/measure/${values.userId}`,{
-            method:'POST',
+        const res = await fetch(`/measure/${values.userId}`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(values)
+            },
+            body: JSON.stringify(values)
         })
-            if(!res.ok) throw new Error("Failed to fecth")
-            const data = await res.json()           
-            return data
+        if (!res.ok) throw new Error("Failed to fecth")
+        const data = await res.json()
+        return data
     } catch (error) {
         console.log(error);
     }
 }
-const updateMeasure = async (measureId,newSyst,newDias,newPulse)=>{
+const updateMeasure = async (measureId, newSyst, newDias, newPulse) => {
     try {
-        const res = await fetch(`/measure/${measureId}`,{
-            method:'PATCH',
+        const res = await fetch(`/measure/${measureId}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({syst:newSyst,dias:newDias,pulse:newPulse})
+            },
+            body: JSON.stringify({ syst: newSyst, dias: newDias, pulse: newPulse })
         })
-            if(!res.ok) {
-                const error = await res.json()
-                throw new Error(error.message)
-            }
-            const data = await res.json()           
-            return data
+        if (!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }
+        const data = await res.json()
+        return data
     } catch (error) {
-       alert(error)
+        alert(error)
     }
 }
-const deleteMeasure = async (measureId)=>{
+const deleteMeasure = async (measureId) => {
     try {
-        const res = await fetch(`/measure/${measureId}`,{
-            method:'DELETE'
+        const res = await fetch(`/measure/${measureId}`, {
+            method: 'DELETE'
         })
-            if(!res.ok) {
-                const error = await res.json()
-                throw new Error(error.message)
-            }
-            const data = await res.json()           
-            return data
+        if (!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }
+        const data = await res.json()
+        return data
     } catch (error) {
-       alert(error)
+        alert(error)
+    }
+}
+const getAllMeasuresByMonth = async (month) => {
+    if (month < 1 || month > 12) alert("Month must be from 1 to 12")
+    try {
+        const res = await fetch(`/measure/avg/${month}`)
+        if (!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }
+        const data = await res.json()
+        return data
+    } catch (error) {
+        alert(error)
     }
 }
 
 
 //Home page functions
-if(window.location.pathname === '/'){
-    const getData = async ()=>{
-       const [users,measures] = await Promise.all([getAllUsers(),getAllMeasures()])
-       document.querySelector('#total-measures').innerHTML = measures.data.length || 0  
-       document.querySelector('#total-patients').innerHTML = users.data.length || 0
+if (window.location.pathname === '/') {
+    const getData = async () => {
+        const [users, measures] = await Promise.all([getAllUsers(), getAllMeasures()])
+        document.querySelector('#total-measures').innerHTML = measures.data.length || 0
+        document.querySelector('#total-patients').innerHTML = users.data.length || 0
     }
     getData()
 }
-
 let patients = []
-const selectUiHandler = async ()=>{    
+const selectUiHandler = async () => {
     const selectEl = document.querySelectorAll('.form-select')
     let selectMarkup = `<option value="" disabled selected>Choose a patient</option>`
-   patients.forEach(pat=>{
-        selectMarkup +=`<option value="${pat.id}">${pat.full_name}</option>`
+    patients.forEach(pat => {
+        selectMarkup += `<option value="${pat.id}">${pat.full_name}</option>`
     })
-    selectEl.forEach(select=>{
+    selectEl.forEach(select => {
         select.innerHTML = ""
-        select.insertAdjacentHTML("afterbegin",selectMarkup)   
+        select.insertAdjacentHTML("afterbegin", selectMarkup)
     })
 }
 
 
 //Manage patients page funtions
-const handleCreateSubmit = async (e)=>{
+const handleCreateSubmit = async (e) => {
     e.preventDefault();
     const input = e.target.querySelector('.form-input')
 
-        if(input.value.split(' ').length != 2){
-             e.target.querySelector('.input-error').innerHTML = "Please provide full name (two words)"
-            e.target.querySelector('.input-success').innerHTML = ""
+    if (input.value.split(' ').length != 2) {
+        e.target.querySelector('.input-error').innerHTML = "Please provide full name (two words)"
+        e.target.querySelector('.input-success').innerHTML = ""
 
-             return 
-        }
-       
-        e.target.querySelector('.input-error').innerHTML = ""
-        
+        return
+    }
 
-    const res  = await createUser(input.value)
-    patients = await getAllUsers().then(res=>res.data)
+    e.target.querySelector('.input-error').innerHTML = ""
+
+
+    const res = await createUser(input.value)
+    patients = await getAllUsers().then(res => res.data)
     e.target.querySelector('.input-success').innerHTML = res.message
     input.value = ""
 
 }
-const  handleUpdateSubmit = async (e)=>{
+const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     const input = e.target.querySelector('.form-input')
     const select = e.target.querySelector('.form-select')
 
-    if(input.value.split(' ').length != 2){
+    if (input.value.split(' ').length != 2) {
         e.target.querySelector('.input-error').innerHTML = "Please provide full name (two words)"
         e.target.querySelector('.input-success').innerHTML = ""
-        return 
-   }
+        return
+    }
 
     e.target.querySelector('.input-error').innerHTML = ""
 
-    const res  = await updateUser(select.value,input.value)    
+    const res = await updateUser(select.value, input.value)
     patients = res.data
     e.target.querySelector('.input-success').innerHTML = res.message
     input.value = ""
     await selectUiHandler(res.data);
 
-    
+
 }
-const handleDeleteUser= async (userId) =>{
-   const newPatients =  await deleteUser(userId);
-   patients = newPatients.data
+const handleDeleteUser = async (userId) => {
+    const newPatients = await deleteUser(userId);
+    patients = newPatients.data
     handleUserTableUi()
 
     document.querySelector('.success').innerHTML = newPatients?.message
-    setTimeout(()=>{
-    document.querySelector('.success').innerHTML = ""
-    },3000)
-    
+    setTimeout(() => {
+        document.querySelector('.success').innerHTML = ""
+    }, 3000)
+
 }
-const handleUserTableUi = async ()=>{
+const handleUserTableUi = async () => {
     const table = document.querySelector("#patients-tb")
-    let tableList = ""    
-    patients.forEach(pat=>{
-        tableList +=`<tr>
+    let tableList = ""
+    patients.forEach(pat => {
+        tableList += `<tr>
                         <td>${pat.id}</td>
                             <td>${pat.full_name}</td>
                             <td>
@@ -274,20 +287,20 @@ const handleUserTableUi = async ()=>{
                             </td>
                         </tr>
                         `
-                    })   
-  table.innerHTML ="";
-  table.insertAdjacentHTML('afterbegin',tableList)
+    })
+    table.innerHTML = "";
+    table.insertAdjacentHTML('afterbegin', tableList)
 }
 
-if(window.location.pathname === '/editPatients'){  
+if (window.location.pathname === '/editPatients') {
 
-    const getData = async ()=> {
-        patients = await getAllUsers().then(res=>res.data)
-        
+    const getData = async () => {
+        patients = await getAllUsers().then(res => res.data)
+
         const formContainer = document.querySelector('.content-container')
         const btns = document.querySelectorAll('.action-btn')
 
-        btns[0].addEventListener('click',async ()=>{
+        btns[0].addEventListener('click', async () => {
             const markup = `
                     <div class="content-header">
                         <h2 class="content-title">Add New Patient</h2>
@@ -315,26 +328,27 @@ if(window.location.pathname === '/editPatients'){
                         </button>
                     </form>
             `
-                    formContainer.innerHTML = "";
-    
-            formContainer.insertAdjacentHTML("afterbegin",markup)    
+            formContainer.innerHTML = "";
+
+            formContainer.insertAdjacentHTML("afterbegin", markup)
             btns[0].className = "action-btn primary";
             btns[1].className = "action-btn secondary";
             btns[2].className = "action-btn secondary";
-    
+
         })
-        btns[1].addEventListener('click',async ()=>{
-        let markup = "";        
-            if(!patients?.length) {
-                markup =   `<div class="table-container">
+        btns[1].addEventListener('click', async () => {
+            let markup = "";
+            if (!patients?.length) {
+                markup = `<div class="table-container">
                               <div class="empty-state">
                                   <i class="fas fa-users fa-2x"></i>
                                   <p>No patients found</p>
                               </div>
                           </div>`
-      
-              }
-            else{markup = `
+
+            }
+            else {
+                markup = `
         <div class="content-header">
             <h2 class="content-title">Edit Patient</h2>
             <p class="content-description">Update patient information</p>
@@ -365,29 +379,29 @@ if(window.location.pathname === '/editPatients'){
             </button>
         </form>
             `
-    
+
             }
             formContainer.innerHTML = "";
-            formContainer.insertAdjacentHTML("afterbegin",markup)   
-            if(patients?.length){                
-                await selectUiHandler() 
+            formContainer.insertAdjacentHTML("afterbegin", markup)
+            if (patients?.length) {
+                await selectUiHandler()
             }
             btns[0].className = "action-btn secondary";
             btns[1].className = "action-btn primary";
             btns[2].className = "action-btn secondary";
         })
-        btns[2].addEventListener('click',async ()=>{
-            let markup =""
-            if(!patients.length) {
-              markup =   `<div class="table-container">
+        btns[2].addEventListener('click', async () => {
+            let markup = ""
+            if (!patients.length) {
+                markup = `<div class="table-container">
                             <div class="empty-state">
                                 <i class="fas fa-users fa-2x"></i>
                                 <p>No patients found</p>
                             </div>
                         </div>`
-    
-            }else{
-                 markup = `
+
+            } else {
+                markup = `
                 <div class="content-header">
                            <h2 class="content-title">Patient List</h2>
                            <p class="content-description">Manage your registered patients</p>
@@ -410,12 +424,12 @@ if(window.location.pathname === '/editPatients'){
                        </div>
                `
             }
-               
-     
+
+
             formContainer.innerHTML = "";
-            formContainer.insertAdjacentHTML("afterbegin",markup)   
-            if(patients?.length){
-            await handleUserTableUi()
+            formContainer.insertAdjacentHTML("afterbegin", markup)
+            if (patients?.length) {
+                await handleUserTableUi()
             }
             btns[0].className = "action-btn secondary";
             btns[1].className = "action-btn secondary";
@@ -427,24 +441,24 @@ if(window.location.pathname === '/editPatients'){
 }
 
 
-const unlockInputs = ()=>{
+const unlockInputs = () => {
     const formGroups = document.querySelectorAll('.form-group')
     const inputs = document.querySelectorAll('.form-input.create-measure')
     const btn = document.querySelector('.submit-btn')
 
-    inputs.forEach((input,i)=>{
+    inputs.forEach((input, i) => {
         input.disabled = false;
         input.value = ""
-        formGroups[i+1].classList.remove('hidden')
+        formGroups[i + 1].classList.remove('hidden')
     })
     btn.disabled = false;
     btn.classList.remove('hidden')
 }
-const handleCreateMeasure =  async (e)=>{
+const handleCreateMeasure = async (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const values = {};
-    
+
     formData.forEach((value, key) => {
         values[key] = value;
     });
@@ -452,23 +466,22 @@ const handleCreateMeasure =  async (e)=>{
     const data = await createMeasure(values)
 
     document.querySelector('.success').innerHTML = data?.message
-    setTimeout(()=>{
-    document.querySelector('.success').innerHTML = ""
-    },3000)
+    setTimeout(() => {
+        document.querySelector('.success').innerHTML = ""
+    }, 3000)
     e.target.reset()
 }
-const handleUpdateMeasure = async (measureId)=>{
+const handleUpdateMeasure = async (measureId) => {
     const inputs = document.querySelectorAll('.edit-input')
-    const data = await updateMeasure(measureId,inputs[0].value,inputs[1].value,inputs[2].value)
-    document.querySelector('.search-success').innerHTML = data.message 
+    const data = await updateMeasure(measureId, inputs[0].value, inputs[1].value, inputs[2].value)
+    document.querySelector('.search-success').innerHTML = data.message
     handleMeasureAvgTable()
 }
-
-const handleEditMeasure = (id)=>{
-    const table = document.querySelector("#measure-tb")  
+const handleEditMeasure = (id) => {
+    const table = document.querySelector("#measure-tb")
     let markup = ""
-    window.measures.measureData.forEach(measure=>{
-        if(measure.id === id){
+    window.measures.measureData.forEach(measure => {
+        if (measure.id === id) {
             markup += `<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""}">
             <td>${measure.id}</td>
             <td>${measure.user_id}</td>
@@ -487,8 +500,8 @@ const handleEditMeasure = (id)=>{
                                 </button>
             </td>
         </tr>`
-        }else{
-            markup +=`<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
+        } else {
+            markup += `<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
                              <td>${measure.id}</td>
                              <td>${measure.user_id}</td>
                              <td>${measure.syst_high}</td>
@@ -508,41 +521,40 @@ const handleEditMeasure = (id)=>{
                          </tr>`
         }
         table.innerHTML = ""
-    table.insertAdjacentHTML("afterbegin",markup)
-})             
+        table.insertAdjacentHTML("afterbegin", markup)
+    })
 }
-const handleDeleteMeasure = async (measureId)=>{
+const handleDeleteMeasure = async (measureId) => {
     const data = await deleteMeasure(measureId)
-    document.querySelector('.search-success').innerHTML = data.message 
+    document.querySelector('.search-success').innerHTML = data.message
     handleMeasureAvgTable()
 }
-
-const handleMeasureAvgTable = async (aborted = false)=>{
+const handleMeasureAvgTable = async (aborted = false) => {
     const searchEl = document.querySelector('.search-select')
     const inputs = document.querySelectorAll('.search-input')
     const startDate = inputs[0].value
     const endDate = inputs[1].value
 
-    if(!searchEl.value) {
+    if (!searchEl.value) {
         document.querySelector('.search-error').innerHTML = "Please select patient first"
         return
     }
-    if((!startDate && endDate) || (startDate && !endDate)) {
+    if ((!startDate && endDate) || (startDate && !endDate)) {
         document.querySelector('.search-error').innerHTML = "Must provide bouth Start and End date (range) to make the search"
         return
     }
 
 
-    document.querySelector('.search-error').innerHTML=""
-    if(!aborted){
-        window.measures = await getAllMeasuresAvg(searchEl.value,startDate,endDate).then(res=>res.data)
-        
-        
+    document.querySelector('.search-error').innerHTML = ""
+    if (!aborted) {
+        window.measures = await getAllMeasuresAvg(searchEl.value, startDate, endDate).then(res => res.data)
+
+
     }
-        const table = document.querySelector("#measure-tb")  
-        let markup = ""
-        window.measures.measureData.forEach(measure=>{
-                markup +=`<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
+    const table = document.querySelector("#measure-tb")
+    let markup = ""
+    window.measures.measureData.forEach(measure => {
+        markup += `<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
                                 <td>${measure.id}</td>
                                 <td>${measure.user_id}</td>
                                 <td>${measure.syst_high}</td>
@@ -560,68 +572,99 @@ const handleMeasureAvgTable = async (aborted = false)=>{
                                     </button>
                                 </td>
                             </tr>`
-        })
+    })
 
     table.innerHTML = ""
     document.querySelector('.search-success').innerHTML = `Found ${window.measures.totalCrits} critical measures out of ${window.measures.measureData.length}`
-        table.insertAdjacentHTML("afterbegin",markup)
+    table.insertAdjacentHTML("afterbegin", markup)
 
 }
-if(window.location.pathname === '/patientsMeasures'){
-const btns = document.querySelectorAll('.action-btn')
-const searchBtn = document.querySelector('.search-btn')
+if (window.location.pathname === '/patientsMeasures') {
+    const btns = document.querySelectorAll('.action-btn')
+    const searchBtn = document.querySelector('.search-btn')
 
-const slider = {
-    currentSlide: 0,
-    slides: document.querySelectorAll('.content-container'),
-    sliderContainer: document.querySelector('.slider'),
-    
-    init() {   
-        
-        btns[0].addEventListener('click', () => this.goToSlide(0));
-        btns[1].addEventListener('click', () => this.goToSlide(1));
-        
-        this.updateSlidePositions();
-        this.updateButtonStates();
-    },
-    
-    goToSlide(index) {
-        if (index !== this.currentSlide) {
-            this.currentSlide = index;
+    const slider = {
+        currentSlide: 0,
+        slides: document.querySelectorAll('.content-container'),
+        sliderContainer: document.querySelector('.slider'),
+
+        init() {
+
+            btns[0].addEventListener('click', () => this.goToSlide(0));
+            btns[1].addEventListener('click', () => this.goToSlide(1));
+
             this.updateSlidePositions();
             this.updateButtonStates();
+        },
+
+        goToSlide(index) {
+            if (index !== this.currentSlide) {
+                this.currentSlide = index;
+                this.updateSlidePositions();
+                this.updateButtonStates();
+            }
+        },
+
+        updateSlidePositions() {
+            this.slides.forEach((slide, index) => {
+                const offset = (index - this.currentSlide) * 100;
+                slide.style.transform = `translateX(${offset}%)`;
+            });
+        },
+
+        updateButtonStates() {
+            if (this.currentSlide === 0) {
+                btns[0].classList.add('primary')
+                btns[0].classList.remove('secondary')
+                btns[1].classList.add('secondary')
+                btns[1].classList.remove('primary')
+            } else {
+                btns[1].classList.add('primary')
+                btns[1].classList.remove('secondary')
+                btns[0].classList.add('secondary')
+                btns[0].classList.remove('primary')
+            }
+
         }
-    },
-    
-    updateSlidePositions() {
-        this.slides.forEach((slide, index) => {
-            const offset = (index - this.currentSlide) * 100;
-            slide.style.transform = `translateX(${offset}%)`;
-        });
-    },
-    
-    updateButtonStates() {
-        if (this.currentSlide === 0) {            
-            btns[0].classList.add('primary')
-            btns[0].classList.remove('secondary')
-            btns[1].classList.add('secondary')
-            btns[1].classList.remove('primary')
-        }else{
-            btns[1].classList.add('primary')
-            btns[1].classList.remove('secondary')
-            btns[0].classList.add('secondary')
-            btns[0].classList.remove('primary')
-        }
-        
+    };
+
+    const getData = async () => {
+        patients = await getAllUsers().then(res => res.data)
+        await selectUiHandler()
+        slider.init();
+
     }
-};
-
-const getData = async ()=>{
-    patients = await getAllUsers().then(res=>res.data)
-    await  selectUiHandler()
-    slider.init();
-
-   }
     getData();
+
+}
+
+
+//allMeasures By month
+const handleMeasuresByMonth = async (e) => {
+    e.preventDefault()
+    const month = document.querySelector('.form-input').value
+
+    if (month < 1 || month > 12) {
+        alert("Month must be from 1 to 12")
+        return
+    }
+    const data = await getAllMeasuresByMonth(month).then(res => res.data)
+    showMonthsTable(data)
+}
+const showMonthsTable = (measuresAvg) => {
+    const table = document.querySelector('#measure-tb')
+    let markup = ""
+    measuresAvg.forEach(avg => {
+        markup += `
+                    <tr >
+                     <td>${avg.userName}</td>
+                     <td>${avg.syst_avg} (${avg.systCnt || 0})</td>
+                     <td>${avg.dias_avg} (${avg.diasCnt || 0})</td>
+                     <td>${avg.pulse_avg} (${avg.pulseCnt || 0})</td>
+                    </tr> 
+        `
+    })
+    table.innerHTML = ""
+    table.insertAdjacentHTML("afterbegin", markup)
 
 }
