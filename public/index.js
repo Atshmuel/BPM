@@ -131,7 +131,6 @@ const getAllMeasures = async ()=>{
 }
 const getMeasureById = async (measureId)=>{}
 const createMeasure = async (values)=>{
-
     try {
         const res = await fetch(`/measure/${values.userId}`,{
             method:'POST',
@@ -147,7 +146,25 @@ const createMeasure = async (values)=>{
         console.log(error);
     }
 }
-const updateMeasure = async (measureId,newSyst,newDias,newPulse)=>{}
+const updateMeasure = async (measureId,newSyst,newDias,newPulse)=>{
+    try {
+        const res = await fetch(`/measure/${measureId}`,{
+            method:'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({syst:newSyst,dias:newDias,pulse:newPulse})
+        })
+            if(!res.ok) {
+                const error = await res.json()
+                throw new Error(error.message)
+            }
+            const data = await res.json()           
+            return data
+    } catch (error) {
+        console.log(error);
+    }
+}
 const deleteMeasure = async (measureId)=>{}
 
 
@@ -394,6 +411,8 @@ if(window.location.pathname === '/editPatients'){
     };
     getData()
 }
+
+
 const unlockInputs = ()=>{
     const formGroups = document.querySelectorAll('.form-group')
     const inputs = document.querySelectorAll('.form-input.create-measure')
@@ -459,8 +478,64 @@ const handleCreateMeasure =  async (e)=>{
     },3000)
     
 }
+const handleUpdateMeasure = async (measureId)=>{
+    const inputs = document.querySelectorAll('.edit-input')
+const data = await updateMeasure(measureId,inputs[0].value,inputs[1].value,inputs[2].value)
+    document.querySelector('.search-success').innerHTML = data.message 
+    
+    handleMeasureAvgTable()
+}
 
-const handleMeasureAvgTable = async ()=>{
+const handleEditMeasure = (id)=>{
+    const table = document.querySelector("#measure-tb")  
+    let markup = ""
+    window.measures.forEach(measure=>{
+        if(measure.id === id){
+            markup += `<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""}">
+            <td>${measure.id}</td>
+            <td>${measure.user_id}</td>
+            <td><input type="number" class="form-input edit-input" value="${measure.syst_high}" id="syst-${measure.id}"></td>
+            <td><input type="number" class="form-input edit-input" value="${measure.pulse}" id="pulse-${measure.id}"></td>
+            <td><input type="number" class="form-input edit-input" value="${measure.dias_low}" id="dias-${measure.id}"></td>
+            <td>${measure.date.split('T')[0]}</td>
+            <td class="table-actions">
+                <button class="submit-btn" onclick="handleUpdateMeasure(${measure.id})">
+                    <i class="fas fa-check"></i>
+                    Update
+                </button>
+                <button class="delete-btn" onclick="handleMeasureAvgTable(true)">
+                                    <i class="fa-solid fa-xmark"></i>
+                                    Cancel
+                                </button>
+            </td>
+        </tr>`
+        }else{
+            markup +=`<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
+                             <td>${measure.id}</td>
+                             <td>${measure.user_id}</td>
+                             <td>${measure.syst_high}</td>
+                             <td>${measure.pulse}</td>
+                             <td>${measure.dias_low}</td>
+                             <td>${measure.date.split('T')[0]}</td>
+                             <td class="table-actions">
+                                 <button class="edit-btn" onclick="handleEditMeasure(${measure.id})">
+                                     <i class="fas fa-pen-to-square"></i>
+                                     Edit
+                                 </button>
+                                 <button class="delete-btn" onclick="handleDeleteMeasure(${measure.id})">
+                                    <i class="fas fa-trash"></i>
+                                    Delete
+                                </button>
+                             </td>
+                         </tr>`
+        }
+        table.innerHTML = ""
+    table.insertAdjacentHTML("afterbegin",markup)
+})             
+}
+const handleDeleteMeasure = (id)=>{}
+
+const handleMeasureAvgTable = async (aborted = false)=>{
     const searchEl = document.querySelector('.search-select')
     const inputs = document.querySelectorAll('.search-input')
 const startDate = inputs[0].value
@@ -477,15 +552,14 @@ if((!startDate && endDate) || (startDate && !endDate)) {
 
 
 document.querySelector('.search-error').innerHTML=""
-    const measures = await getAllMeasuresAvg(searchEl.value,startDate,endDate).then(res=>res.data)
-    const table = document.querySelector("#measure-tb")
-    console.log(measures);
-    
+if(!aborted){
+    window.measures = await getAllMeasuresAvg(searchEl.value,startDate,endDate).then(res=>res.data)
+}
+    const table = document.querySelector("#measure-tb")  
        let markup = ""
-    measures.forEach(measure=>{
-            markup +=`<tr class="${measure.critical ? "crit" : ""}">
+       window.measures.forEach(measure=>{
+            markup +=`<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
                              <td>${measure.id}</td>
-
                              <td>${measure.user_id}</td>
                              <td>${measure.syst_high}</td>
                              <td>${measure.pulse}</td>
@@ -496,7 +570,7 @@ document.querySelector('.search-error').innerHTML=""
                                      <i class="fas fa-pen-to-square"></i>
                                      Edit
                                  </button>
-                                 <button class="delete-btn" onclick="HandleDeleteMeasure(${measure.id})">
+                                 <button class="delete-btn" onclick="handleDeleteMeasure(${measure.id})">
                                     <i class="fas fa-trash"></i>
                                     Delete
                                 </button>
