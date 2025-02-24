@@ -162,10 +162,24 @@ const updateMeasure = async (measureId,newSyst,newDias,newPulse)=>{
             const data = await res.json()           
             return data
     } catch (error) {
-        console.log(error);
+       alert(error)
     }
 }
-const deleteMeasure = async (measureId)=>{}
+const deleteMeasure = async (measureId)=>{
+    try {
+        const res = await fetch(`/measure/${measureId}`,{
+            method:'DELETE'
+        })
+            if(!res.ok) {
+                const error = await res.json()
+                throw new Error(error.message)
+            }
+            const data = await res.json()           
+            return data
+    } catch (error) {
+       alert(error)
+    }
+}
 
 
 //Home page functions
@@ -426,41 +440,7 @@ const unlockInputs = ()=>{
     btn.disabled = false;
     btn.classList.remove('hidden')
 }
-const showMeasuresTable = ()=>{
-    let markup =""
-            if(!patients.length) {
-              markup =   `<div class="table-container">
-                            <div class="empty-state">
-                                <i class="fas fa-users fa-2x"></i>
-                                <p>No patients found</p>
-                            </div>
-                        </div>`
-    
-            }else{
-                 markup = `
-                <div class="content-header">
-                           <h2 class="content-title"> List</h2>
-                           <p class="content-description">Manage your registered patients</p>
-                           <span class="success"></span>
-                       </div>
-                        <div class="patients-table-container">
 
-                       <table class="patients-table">
-                           <thead>
-                               <tr>
-                                   <th>ID</th>
-                                   <th>Patient Name</th>
-                                   <th>Actions</th>
-                               </tr>
-                           </thead>
-                           <tbody id="patients-tb">
-                               
-                           </tbody>
-                       </table>
-                       </div>
-               `
-            }
-}
 const handleCreateMeasure =  async (e)=>{
     e.preventDefault()
     const formData = new FormData(e.target)
@@ -480,9 +460,9 @@ const handleCreateMeasure =  async (e)=>{
 }
 const handleUpdateMeasure = async (measureId)=>{
     const inputs = document.querySelectorAll('.edit-input')
-const data = await updateMeasure(measureId,inputs[0].value,inputs[1].value,inputs[2].value)
+    const data = await updateMeasure(measureId,inputs[0].value,inputs[1].value,inputs[2].value)
+//handle Error ?
     document.querySelector('.search-success').innerHTML = data.message 
-    
     handleMeasureAvgTable()
 }
 
@@ -533,7 +513,15 @@ const handleEditMeasure = (id)=>{
     table.insertAdjacentHTML("afterbegin",markup)
 })             
 }
-const handleDeleteMeasure = (id)=>{}
+const handleDeleteMeasure = async (measureId)=>{
+    const data = await deleteMeasure(measureId)
+    
+//handle Error ?
+console.log(data);
+
+    document.querySelector('.search-success').innerHTML = data.message 
+    handleMeasureAvgTable()
+}
 
 const handleMeasureAvgTable = async (aborted = false)=>{
     const searchEl = document.querySelector('.search-select')
