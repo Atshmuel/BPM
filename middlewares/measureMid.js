@@ -32,7 +32,57 @@ async function getMeasure(req,res,next) {
     }
 
 }
+async function getAvgByMonth(req,res,next) {
+    try {        
+        if(!req.allUsers) throw new Error("Counld not find any user")
+        if(!req.params.month) throw new Error("Month required!.")
+            let sqlQuery ="select * from measures where Month(date) = ?";
+            let queryValues = [req.params.month]
+            const [measures] = await pool.query(sqlQuery,queryValues)
+            if(!measures.length) throw new Error("Fail to get this measure id.")
 
+
+            sqlQuery = `select user_id,avg(syst_high) as syst_avg,avg(dias_low) as dias_avg ,avg(pulse) as pulse_avg from measures where Month(date) = ? group by user_id`
+            const [measuresAvg] = await pool.query(sqlQuery,queryValues)
+            if(!measuresAvg.length) throw new Error("Fail to get this measure id.")
+
+
+            measuresAvg.forEach(avg=>{
+                measures.forEach(measure=>{
+                    if(measure.user_id === avg.user_id){
+                        if(+measure.syst_high > +avg.syst_avg * 1.2){
+                            avg.systCnt = avg.systCnt ? avg.systCnt++ : 1
+                        }
+                        if(+measure.dias_low > +avg.dias_avg   * 1.2){
+                            avg.diasCnt = avg.diasCnt ? avg.diasCnt++ : 1      
+                        }
+                        if(+measure.pulse > +avg.pulse_avg * 1.2){
+                            avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt++ : 1
+                        }
+                    }
+                })
+            })
+
+            measuresAvg.forEach(avg=>{
+                req.allUsers.forEach(user=>{
+                    if(avg.user_id === user.id){
+                        avg.userName = user.full_name
+                    }
+                })
+            })
+            
+
+            req.measuresAvg = measuresAvg
+            
+            
+
+
+            next()
+    } catch (error) {
+        res.status(400).json({ message: `${error.sqlMessage || error.message}` })
+    }
+
+}
 async function getAllMeasuresAvg(req,res,next) {
     try {
             let sqlQuery = "select user_id,avg(syst_high) as syst_avg,avg(dias_low) as dias_avg ,avg(pulse) as pulse_avg from measures where user_id = ?"
@@ -44,6 +94,7 @@ async function getAllMeasuresAvg(req,res,next) {
 
         sqlQuery+=" group by user_id"
         const [avgData] = await pool.query(sqlQuery,queryValues)
+        
         if(!avgData.length) throw new Error("Could not find any measure for this user accrding to your request.")
         sqlQuery = "select * from measures where user_id = ?";
         queryValues = [req.params.userId]
@@ -51,15 +102,24 @@ async function getAllMeasuresAvg(req,res,next) {
                     sqlQuery += " and date between ? and ? "
                     queryValues.push(req.body.startDate,req.body.endDate)
                 }
-                const [measureData] = await pool.query(sqlQuery,queryValues)            
+        const [measureData] = await pool.query(sqlQuery,queryValues)            
             
-
+                let totalCrits = 0
                 measureData.forEach(measure=>{
-                        measure.critical = +measure.syst_high > +avgData[0].syst_avg * 1.2 || +measure.dias_low > +avgData[0].dias_avg   * 1.2 || +measure.pulse > +avgData[0].pulse_avg * 1.2
+                    measure.critical = false
+                    if(+measure.syst_high > +avgData[0].syst_avg * 1.2){
+                        measure.critical = true
+                    }
+                    if(+measure.dias_low > +avgData[0].dias_avg   * 1.2){
+                        measure.critical = true
+                    }
+                    if(+measure.pulse > +avgData[0].pulse_avg * 1.2){
+                        measure.critical = true
+                    }
+                    totalCrits += measure.critical ? 1 : 0
                 })
             
-            
-            req.measureData = measureData;
+            req.measureData = {measureData,totalCrits,avgData: avgData[0]};
      
             next()
     } catch (error) {
@@ -132,4 +192,4 @@ async function deleteMeasure(req,res,next) {
     }  
 
 }
-module.exports = {createMeasure,getMeasure,getAllMeasures,getAllMeasuresById,updateMeasure,deleteMeasure,getAllMeasuresAvg}
+module.exports = {createMeasure,getMeasure,getAllMeasures,getAllMeasuresById,updateMeasure,deleteMeasure,getAllMeasuresAvg,getAvgByMonth}

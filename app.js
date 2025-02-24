@@ -38,8 +38,8 @@ app.get('/patientsMeasures',(req,res)=>{
     res.status(200).sendFile(path.join(__dirname, "public", "patientMeasures.html"))
 })
 
-app.get('/allPatients',(req,res)=>{
-    res.status(200).sendFile(path.join(__dirname, "public", "allPatients.html"))
+app.get('/allMeasures',(req,res)=>{
+    res.status(200).sendFile(path.join(__dirname, "public", "allMeasures.html"))
 })
 
 

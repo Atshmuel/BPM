@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPM App - Blood Pressure Measurement</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Side Navigation -->
+    <nav class="sidenav">
+        <div class="menu-label">Home page</div>
+        <div class="sidenav-header">
+
+            <div class="logo">
+                <a href="/" class="nav-link logo">
+                    <i class="fas fa-heartbeat logo-icon"></i>
+                    <span class="logo-text">BPM App</span>
+                </a>
+                </div>
+        </div>
+        
+        <div class="menu-label">Management</div>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="/patientsMeasures" class="nav-link">
+                    <i class="fas fa-users nav-icon"></i>
+                    <span>Add/Review Patient Measurements</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/editPatients" class="nav-link">
+                    <i class="fas fa-user-plus nav-icon"></i>
+                    <span>Manage Patients</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="menu-label">Analytics</div>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="/allMeasures" class="nav-link">
+                    <i class="fas fa-file-medical-alt nav-icon"></i>
+                    <span>All Measurements </span>
+                </a>
+            </li>
+        </ul>
+       
+    </nav>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+                <i class="fas fa-heartbeat logo-icon"></i>
+                <span class="logo-text">BPM - Blood Pressure Measurement Application</span>
+                    </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+
+        
+        
+        <div class="main-content">    
+            
+            
+            <div class="content-container">
+                <div class="content-header">
+                    <h2 class="content-title">Manage Measures</h2>
+                    <span class="success search-success"></span>
+                    <span class="input-error search-error"></span>
+                </div>
+                <div class="patients-table-container">
+                     <label for="userId" class="form-label">Select Month</label>
+                     <div class="form-group date-picker-group">
+                        <input type="number" min="1" max="12" class="form-input" />
+                        <span class="fake-btn primary search-btn" onclick="handleMeasureAvgTable()">
+                            <i class="fa-solid fa-magnifying-glass" ></i>
+                            Search
+                        </span>
+                    </div>
+    
+                <table class="patients-table">
+                    <thead>
+                        <tr >
+                            
+                            <th>User</th>
+                            <th>Systolic AVG</th>
+                            <th>Diastolic AVG</th>
+                            <th>Pulse AVG</th>
+                            <th>Total Critcal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="measure-tb">
+                        <!-- <tr class="crit">
+                     <td>User ID</td>
+                     <td>Systolic</td>
+                     <td>Diastolic</td>
+                     <td>Pulse</td>
+                     <td>Date</td>
+                     <td class="table-actions">
+                         <button class="edit-btn" onclick="handleEditMeasure()">
+                             <i class="fas fa-pen-to-square"></i>
+                             Edit
+                         </button>
+                         <button class="delete-btn" onclick="HandleDeleteMeasure()">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                     </td>
+                 </tr> -->
+                 <!-- <tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""}">
+                    <td>${measure.id}</td>
+                    <td>${measure.user_id}</td>
+                    <td><input type="number" class="form-input" value="${measure.syst_high}" id="syst-${measure.id}"></td>
+                    <td><input type="number" class="form-input" value="${measure.pulse}" id="pulse-${measure.id}"></td>
+                    <td><input type="number" class="form-input" value="${measure.dias_low}" id="dias-${measure.id}"></td>
+                    <td>${measure.date.split('T')[0]}</td>
+                    <td class="table-actions">
+                        <button class="submit-btn" onclick="handleSubmitMeasure(${measure.id})">
+                            <i class="fas fa-check"></i>
+                            Update
+                        </button>
+                    </td>
+                </tr> -->
+                    </tbody>
+                </table>
+                </div>
+            </div> 
+        </div>
+
+            <div class="quick-actions">
+                <button class="action-btn">
+                    <i class="fas fa-user-plus"></i>
+                    New Patient
+                </button>
+                <button class="action-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    New Measure
+                </button>
+
+            </div>
+        </div>
+    </main>
+    
+  
+</body>
+</html>

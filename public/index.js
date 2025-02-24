@@ -102,7 +102,7 @@ const getAllMeasuresAvg = async (userId,startDate,endDate)=>{
             const error = await res.json()
             throw new Error(error.message)
         }
-        const data = await res.json() 
+        const data = await res.json()         
         return data      
     } catch (error) {
         alert(error);
@@ -440,7 +440,6 @@ const unlockInputs = ()=>{
     btn.disabled = false;
     btn.classList.remove('hidden')
 }
-
 const handleCreateMeasure =  async (e)=>{
     e.preventDefault()
     const formData = new FormData(e.target)
@@ -456,12 +455,11 @@ const handleCreateMeasure =  async (e)=>{
     setTimeout(()=>{
     document.querySelector('.success').innerHTML = ""
     },3000)
-    
+    e.target.reset()
 }
 const handleUpdateMeasure = async (measureId)=>{
     const inputs = document.querySelectorAll('.edit-input')
     const data = await updateMeasure(measureId,inputs[0].value,inputs[1].value,inputs[2].value)
-//handle Error ?
     document.querySelector('.search-success').innerHTML = data.message 
     handleMeasureAvgTable()
 }
@@ -469,14 +467,14 @@ const handleUpdateMeasure = async (measureId)=>{
 const handleEditMeasure = (id)=>{
     const table = document.querySelector("#measure-tb")  
     let markup = ""
-    window.measures.forEach(measure=>{
+    window.measures.measureData.forEach(measure=>{
         if(measure.id === id){
             markup += `<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""}">
             <td>${measure.id}</td>
             <td>${measure.user_id}</td>
             <td><input type="number" class="form-input edit-input" value="${measure.syst_high}" id="syst-${measure.id}"></td>
-            <td><input type="number" class="form-input edit-input" value="${measure.pulse}" id="pulse-${measure.id}"></td>
             <td><input type="number" class="form-input edit-input" value="${measure.dias_low}" id="dias-${measure.id}"></td>
+            <td><input type="number" class="form-input edit-input" value="${measure.pulse}" id="pulse-${measure.id}"></td>
             <td>${measure.date.split('T')[0]}</td>
             <td class="table-actions">
                 <button class="submit-btn" onclick="handleUpdateMeasure(${measure.id})">
@@ -494,8 +492,8 @@ const handleEditMeasure = (id)=>{
                              <td>${measure.id}</td>
                              <td>${measure.user_id}</td>
                              <td>${measure.syst_high}</td>
-                             <td>${measure.pulse}</td>
                              <td>${measure.dias_low}</td>
+                             <td>${measure.pulse}</td>
                              <td>${measure.date.split('T')[0]}</td>
                              <td class="table-actions">
                                  <button class="edit-btn" onclick="handleEditMeasure(${measure.id})">
@@ -515,10 +513,6 @@ const handleEditMeasure = (id)=>{
 }
 const handleDeleteMeasure = async (measureId)=>{
     const data = await deleteMeasure(measureId)
-    
-//handle Error ?
-console.log(data);
-
     document.querySelector('.search-success').innerHTML = data.message 
     handleMeasureAvgTable()
 }
@@ -526,48 +520,52 @@ console.log(data);
 const handleMeasureAvgTable = async (aborted = false)=>{
     const searchEl = document.querySelector('.search-select')
     const inputs = document.querySelectorAll('.search-input')
-const startDate = inputs[0].value
-const endDate = inputs[1].value
+    const startDate = inputs[0].value
+    const endDate = inputs[1].value
 
-if(!searchEl.value) {
-    document.querySelector('.search-error').innerHTML = "Please select patient first"
-    return
-}
-if((!startDate && endDate) || (startDate && !endDate)) {
-    document.querySelector('.search-error').innerHTML = "Must provide bouth Start and End date (range) to make the search"
-    return
-}
+    if(!searchEl.value) {
+        document.querySelector('.search-error').innerHTML = "Please select patient first"
+        return
+    }
+    if((!startDate && endDate) || (startDate && !endDate)) {
+        document.querySelector('.search-error').innerHTML = "Must provide bouth Start and End date (range) to make the search"
+        return
+    }
 
 
-document.querySelector('.search-error').innerHTML=""
-if(!aborted){
-    window.measures = await getAllMeasuresAvg(searchEl.value,startDate,endDate).then(res=>res.data)
-}
-    const table = document.querySelector("#measure-tb")  
-       let markup = ""
-       window.measures.forEach(measure=>{
-            markup +=`<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
-                             <td>${measure.id}</td>
-                             <td>${measure.user_id}</td>
-                             <td>${measure.syst_high}</td>
-                             <td>${measure.pulse}</td>
-                             <td>${measure.dias_low}</td>
-                             <td>${measure.date.split('T')[0]}</td>
-                             <td class="table-actions">
-                                 <button class="edit-btn" onclick="handleEditMeasure(${measure.id})">
-                                     <i class="fas fa-pen-to-square"></i>
-                                     Edit
-                                 </button>
-                                 <button class="delete-btn" onclick="handleDeleteMeasure(${measure.id})">
-                                    <i class="fas fa-trash"></i>
-                                    Delete
-                                </button>
-                             </td>
-                         </tr>`
-    })
+    document.querySelector('.search-error').innerHTML=""
+    if(!aborted){
+        window.measures = await getAllMeasuresAvg(searchEl.value,startDate,endDate).then(res=>res.data)
+        
+        
+    }
+        const table = document.querySelector("#measure-tb")  
+        let markup = ""
+        window.measures.measureData.forEach(measure=>{
+                markup +=`<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
+                                <td>${measure.id}</td>
+                                <td>${measure.user_id}</td>
+                                <td>${measure.syst_high}</td>
+                                <td>${measure.dias_low}</td>
+                                <td>${measure.pulse}</td>
+                                <td>${measure.date.split('T')[0]}</td>
+                                <td class="table-actions">
+                                    <button class="edit-btn" onclick="handleEditMeasure(${measure.id})">
+                                        <i class="fas fa-pen-to-square"></i>
+                                        Edit
+                                    </button>
+                                    <button class="delete-btn" onclick="handleDeleteMeasure(${measure.id})">
+                                        <i class="fas fa-trash"></i>
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>`
+        })
 
-table.innerHTML = ""
-    table.insertAdjacentHTML("afterbegin",markup)
+    table.innerHTML = ""
+    document.querySelector('.search-success').innerHTML = `Found ${window.measures.totalCrits} critical measures out of ${window.measures.measureData.length}`
+        table.insertAdjacentHTML("afterbegin",markup)
+
 }
 if(window.location.pathname === '/patientsMeasures'){
 const btns = document.querySelectorAll('.action-btn')

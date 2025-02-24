@@ -1,9 +1,15 @@
 const { Router } = require("express")
-const  {createMeasure,getMeasure,getAllMeasuresById,getAllMeasures,updateMeasure,deleteMeasure,getAllMeasuresAvg} = require("../middlewares/measureMid")
+const  {createMeasure,getMeasure,getAllMeasuresById,getAllMeasures,updateMeasure,deleteMeasure,getAllMeasuresAvg,getAvgByMonth} = require("../middlewares/measureMid")
+const {getAllUsers} = require("../middlewares/userMid")
+
 const measureRouter = Router()
 
 
 measureRouter.post('/avg/:userId',getAllMeasuresAvg,(req,res)=>{
+    res.status(200).json({message:"Avg data found.",data: req.measureData})
+})
+
+measureRouter.get('/avg/:month',getAllUsers,getAvgByMonth,(req,res)=>{
     res.status(200).json({message:"Avg data found.",data: req.measureData})
 })
 
