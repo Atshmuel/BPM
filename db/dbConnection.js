@@ -9,6 +9,7 @@ const pool = mysql.createPool({
     user: `${DB_USER}`,
     password: `${DB_PASSWORD}`,
     database: `${DB_NAME}`,
+    timezone: 'local',
     port: 3306,
     waitForConnections: true,
     connectionLimit: 10,
@@ -17,7 +18,7 @@ const pool = mysql.createPool({
     queueLimit: 0,
     enableKeepAlive: true,
     keepAliveInitialDelay: 0,
-    multipleStatements:true,
+    multipleStatements: true,
 });
 
 module.exports = { pool }

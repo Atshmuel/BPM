@@ -1,16 +1,19 @@
 const { pool } = require('../db/dbConnection')
-const { isBefore, isSameDay } = require('date-fns')
+const { isBefore, isSameDay, isDate } = require('date-fns')
 async function createMeasure(req, res, next) {
     try {
         if (!req.params.userId) throw new Error("ID required!.")
         if (!req.body.syst || isNaN(+req.body.syst)) throw new Error("Systolic must be provided and needs to be a positive number")
         if (!req.body.dias || isNaN(+req.body.dias)) throw new Error("Diastolic must be provided and needs to be a positive number")
         if (!req.body.pulse || isNaN(+req.body.pulse)) throw new Error("Pulse must be provided and needs to be a positive number")
+        if (!req.body.date || !isDate(new Date(req.body.date))) throw new Error("Date must be provided (dd/mm/yyyy) ")
 
-
+        const [month, day, year] = new Date(req.body.date).toLocaleDateString().split("/")
+        const date = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`
         let sqlQuery = "insert into measures (user_id,date,syst_high,dias_low,pulse) Values (?,?,?,?,?)";
-        let queryValues = [+req.params.userId, new Date().toISOString().split('T')[0], +req.body.syst, +req.body.dias, +req.body.pulse]
+        let queryValues = [+req.params.userId, date, +req.body.syst, +req.body.dias, +req.body.pulse]
         const [data] = await pool.query(sqlQuery, queryValues)
+
         req.measureId = data.insertId;
         next()
     } catch (error) {
@@ -49,13 +52,13 @@ async function getAvgByMonth(req, res, next) {
             measures.forEach(measure => {
                 if (measure.user_id === avg.user_id) {
                     if (+measure.syst_high > +avg.syst_avg * 1.2) {
-                        avg.systCnt = avg.systCnt ? avg.systCnt++ : 1
+                        avg.systCnt = avg.systCnt ? avg.systCnt + 1 : 1
                     }
                     if (+measure.dias_low > +avg.dias_avg * 1.2) {
-                        avg.diasCnt = avg.diasCnt ? avg.diasCnt++ : 1
+                        avg.diasCnt = avg.diasCnt ? avg.diasCnt + 1 : 1
                     }
                     if (+measure.pulse > +avg.pulse_avg * 1.2) {
-                        avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt++ : 1
+                        avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt + 1 : 1
                     }
                 }
             })

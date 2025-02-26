@@ -139,11 +139,14 @@ const createMeasure = async (values) => {
             },
             body: JSON.stringify(values)
         })
-        if (!res.ok) throw new Error("Failed to fecth")
+        if (!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+        }
         const data = await res.json()
         return data
     } catch (error) {
-        console.log(error);
+        alert(error)
     }
 }
 const updateMeasure = async (measureId, newSyst, newDias, newPulse) => {
@@ -462,7 +465,6 @@ const handleCreateMeasure = async (e) => {
     formData.forEach((value, key) => {
         values[key] = value;
     });
-
     const data = await createMeasure(values)
 
     document.querySelector('.success').innerHTML = data?.message
