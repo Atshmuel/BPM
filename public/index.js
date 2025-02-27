@@ -183,10 +183,11 @@ const deleteMeasure = async (measureId) => {
         alert(error)
     }
 }
-const getAllMeasuresByMonth = async (month) => {
+const getMeasuresByMonthAndYear = async (month, year) => {
     if (month < 1 || month > 12) alert("Month must be from 1 to 12")
+    if (year < 0 || year > new Date().getFullYear()) alert(`Year must be from 1 to ${new Date().getFullYear()}`)
     try {
-        const res = await fetch(`/measure/avg/${month}`)
+        const res = await fetch(`/measure/avg/?month=${month}&year=${year}`)
         if (!res.ok) {
             const error = await res.json()
             throw new Error(error.message)
@@ -644,13 +645,19 @@ if (window.location.pathname === '/patientsMeasures') {
 //allMeasures By month
 const handleMeasuresByMonth = async (e) => {
     e.preventDefault()
-    const month = document.querySelector('.form-input').value
+    const month = document.querySelector('.month').value
+    const year = document.querySelector('.year').value
 
     if (month < 1 || month > 12) {
         alert("Month must be from 1 to 12")
         return
     }
-    const data = await getAllMeasuresByMonth(month).then(res => res.data)
+    if (year < 0 || year > new Date().getFullYear()) {
+        alert(`Year must be from 0 to ${new Date().getFullYear()}`)
+        return
+    }
+
+    const data = await getMeasuresByMonthAndYear(month, year).then(res => res.data)
     showMonthsTable(data)
 }
 const showMonthsTable = (measuresAvg) => {
@@ -669,4 +676,13 @@ const showMonthsTable = (measuresAvg) => {
     table.innerHTML = ""
     table.insertAdjacentHTML("afterbegin", markup)
 
+}
+if (window.location.pathname === '/allMeasures') {
+    const yearsList = document.querySelector('#years-list');
+    let options = ""
+    const currYear = new Date().getFullYear()
+    for (let i = 0; i <= currYear; i++) {
+        options += `<option>${i.toLocaleString().replaceAll(',', '').padStart(4, 0)}</option>`
+    }
+    yearsList.insertAdjacentHTML('afterbegin', options)
 }

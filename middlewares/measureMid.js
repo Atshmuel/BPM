@@ -3,9 +3,9 @@ const { isBefore, isSameDay, isDate } = require('date-fns')
 async function createMeasure(req, res, next) {
     try {
         if (!req.params.userId) throw new Error("ID required!.")
-        if (!req.body.syst || isNaN(+req.body.syst)) throw new Error("Systolic must be provided and needs to be a positive number")
-        if (!req.body.dias || isNaN(+req.body.dias)) throw new Error("Diastolic must be provided and needs to be a positive number")
-        if (!req.body.pulse || isNaN(+req.body.pulse)) throw new Error("Pulse must be provided and needs to be a positive number")
+        if (!req.body.syst || isNaN(+req.body.syst) || +req.body.syst < 0) throw new Error("Systolic must be provided and needs to be a positive number")
+        if (!req.body.dias || isNaN(+req.body.dias) || +req.body.dias < 0) throw new Error("Diastolic must be provided and needs to be a positive number")
+        if (!req.body.pulse || isNaN(+req.body.pulse) || +req.body.pulse < 0) throw new Error("Pulse must be provided and needs to be a positive number")
         if (!req.body.date || !isDate(new Date(req.body.date))) throw new Error("Date must be provided (dd/mm/yyyy) ")
 
         const [month, day, year] = new Date(req.body.date).toLocaleDateString().split("/")
@@ -38,13 +38,14 @@ async function getMeasure(req, res, next) {
 async function getAvgByMonth(req, res, next) {
     try {
         if (!req.allUsers) throw new Error("Counld not find any user")
-        if (!req.params.month || +req.params.month < 1 || +req.params.month > 12) throw new Error("Month required!.")
-        let sqlQuery = "select * from measures where Month(date) = ?";
-        let queryValues = [req.params.month]
+        if (!req.query.month || +req.query.month < 1 || +req.query.month > 12) throw new Error("Month required!.")
+        if (!req.query.year || +req.query.year < 0 || +req.query.year > new Date().getFullYear()) throw new Error("Year required!.")
+        let sqlQuery = "select * from measures where Month(date) = ? and Year(date) = ?";
+        let queryValues = [req.query.month, req.query.year]
         const [measures] = await pool.query(sqlQuery, queryValues)
         if (!measures.length) throw new Error("Could not find any the measures for this mounth.")
 
-        sqlQuery = `select user_id,avg(syst_high) as syst_avg,avg(dias_low) as dias_avg ,avg(pulse) as pulse_avg from measures where Month(date) = ? group by user_id`
+        sqlQuery = `select user_id,avg(syst_high) as syst_avg,avg(dias_low) as dias_avg ,avg(pulse) as pulse_avg from measures where Month(date) = ? and Year(date) = ? group by user_id`
         const [measuresAvg] = await pool.query(sqlQuery, queryValues)
         if (!measuresAvg.length) throw new Error("Could not get the measures avg.")
 
@@ -136,7 +137,7 @@ async function getAllMeasures(req, res, next) {
 async function getAllMeasuresById(req, res, next) {
     try {
         if (!req.params.userId) throw new Error("ID required!.")
-        let sqlQuery = "select * from measures where id=?";
+        let sqlQuery = "select * from measures where user_id=?";
         let queryValues = [req.params.userId]
         if (req.body.startDate && req.body.endDate && (isBefore(req.body.startDate, req.body.endDate) || isSameDay(req.body.endDate, req.body.startDate))) {
             sqlQuery += " and date between ? and ?"
@@ -155,9 +156,9 @@ async function getAllMeasuresById(req, res, next) {
 async function updateMeasure(req, res, next) {
     try {
         if (!req.params.measureId || isNaN(+req.params.measureId)) throw new Error("Measure id required!.")
-        if (!req.body.syst || isNaN(+req.body.syst)) throw new Error("Systolic must be provided and needs to be a positive number")
-        if (!req.body.dias || isNaN(+req.body.dias)) throw new Error("Diastolic must be provided and needs to be a positive number")
-        if (!req.body.pulse || isNaN(+req.body.pulse)) throw new Error("Pulse must be provided and needs to be a positive number")
+        if (!req.body.syst || isNaN(+req.body.syst) || +req.body.syst < 0) throw new Error("Systolic must be provided and needs to be a positive number")
+        if (!req.body.dias || isNaN(+req.body.dias) || +req.body.dias < 0) throw new Error("Diastolic must be provided and needs to be a positive number")
+        if (!req.body.pulse || isNaN(+req.body.pulse) || +req.body.pulse < 0) throw new Error("Pulse must be provided and needs to be a positive number")
 
         let sqlQuery = "update measures set syst_high=?, dias_low=?, pulse=? where id = ?"
         let queryValues = [+req.body.syst, +req.body.dias, +req.body.pulse, +req.params.measureId]
