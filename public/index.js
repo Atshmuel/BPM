@@ -107,6 +107,7 @@ const getAllMeasuresAvg = async (userId, startDate, endDate) => {
         return data
     } catch (error) {
         alert(error);
+        return { data: { fail: true } }
     }
 }
 const getAllUserMeasures = async (userId, startDate, endDate) => {
@@ -551,13 +552,13 @@ const handleMeasureAvgTable = async (aborted = false) => {
     document.querySelector('.search-error').innerHTML = ""
     if (!aborted) {
         window.measures = await getAllMeasuresAvg(searchEl.value, startDate, endDate).then(res => res.data)
-
-
     }
     const table = document.querySelector("#measure-tb")
     let markup = ""
-    window.measures.measureData.forEach(measure => {
-        markup += `<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
+    if (!window?.measures?.fail) {
+
+        window.measures.measureData.forEach(measure => {
+            markup += `<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
                                 <td>${measure.id}</td>
                                 <td>${measure.user_id}</td>
                                 <td>${measure.syst_high}</td>
@@ -575,10 +576,11 @@ const handleMeasureAvgTable = async (aborted = false) => {
                                     </button>
                                 </td>
                             </tr>`
-    })
+        })
 
+        document.querySelector('.search-success').innerHTML = `Found ${window.measures.totalCrits} critical measures out of ${window.measures.measureData.length}`
+    }
     table.innerHTML = ""
-    document.querySelector('.search-success').innerHTML = `Found ${window.measures.totalCrits} critical measures out of ${window.measures.measureData.length}`
     table.insertAdjacentHTML("afterbegin", markup)
 
 }
