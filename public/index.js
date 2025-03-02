@@ -132,7 +132,9 @@ const getAllMeasures = async () => {
 
 }
 const createMeasure = async (values) => {
+
     try {
+        if (new Date(values.date).getFullYear() > new Date().getFullYear()) throw new Error(`Year must from 1 - ${new Date().getFullYear()}`)
         const res = await fetch(`/measure/${values.userId}`, {
             method: 'POST',
             headers: {
@@ -467,6 +469,8 @@ const handleCreateMeasure = async (e) => {
     formData.forEach((value, key) => {
         values[key] = value;
     });
+
+
     const data = await createMeasure(values)
 
     document.querySelector('.success').innerHTML = data?.message
@@ -531,6 +535,9 @@ const handleEditMeasure = (id) => {
 const handleDeleteMeasure = async (measureId) => {
     const data = await deleteMeasure(measureId)
     document.querySelector('.search-success').innerHTML = data.message
+    setTimeout(() => {
+        document.querySelector('.search-success').innerHTML = ''
+    }, 3000)
     handleMeasureAvgTable()
 }
 const handleMeasureAvgTable = async (aborted = false) => {
@@ -594,7 +601,6 @@ if (window.location.pathname === '/patientsMeasures') {
         sliderContainer: document.querySelector('.slider'),
 
         init() {
-
             btns[0].addEventListener('click', () => this.goToSlide(0));
             btns[1].addEventListener('click', () => this.goToSlide(1));
 

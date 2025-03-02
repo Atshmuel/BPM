@@ -7,6 +7,7 @@ async function createMeasure(req, res, next) {
         if (!req.body.dias || isNaN(+req.body.dias) || +req.body.dias < 0) throw new Error("Diastolic must be provided and needs to be a positive number")
         if (!req.body.pulse || isNaN(+req.body.pulse) || +req.body.pulse < 0) throw new Error("Pulse must be provided and needs to be a positive number")
         if (!req.body.date || !isDate(new Date(req.body.date))) throw new Error("Date must be provided (dd/mm/yyyy) ")
+        if (new Date(req.body.date).getFullYear() > new Date().getFullYear()) throw new Error("Measure date can't be in the feauture ! ")
 
         const [month, day, year] = new Date(req.body.date).toLocaleDateString().split("/")
         const date = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`
@@ -52,13 +53,13 @@ async function getAvgByMonth(req, res, next) {
         measuresAvg.forEach(avg => {
             measures.forEach(measure => {
                 if (measure.user_id === avg.user_id) {
-                    if (+measure.syst_high > +avg.syst_avg * 1.2) {
+                    if (+measure.syst_high >= +avg.syst_avg * 1.2 || +measure.syst_high <= +avg.syst_avg * 0.8) {
                         avg.systCnt = avg.systCnt ? avg.systCnt + 1 : 1
                     }
-                    if (+measure.dias_low > +avg.dias_avg * 1.2) {
+                    if (+measure.dias_low >= +avg.dias_avg * 1.2 || +measure.dias_low <= +avg.dias_avg * 0.8) {
                         avg.diasCnt = avg.diasCnt ? avg.diasCnt + 1 : 1
                     }
-                    if (+measure.pulse > +avg.pulse_avg * 1.2) {
+                    if (+measure.pulse >= +avg.pulse_avg * 1.2 || +measure.pulse <= +avg.pulse_avg * 0.8) {
                         avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt + 1 : 1
                     }
                 }
