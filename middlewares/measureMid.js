@@ -8,11 +8,8 @@ async function createMeasure(req, res, next) {
         if (!req.body.pulse || isNaN(+req.body.pulse) || +req.body.pulse < 0) throw new Error("Pulse must be provided and needs to be a positive number")
         if (!req.body.date || !isDate(new Date(req.body.date))) throw new Error("Date must be provided (dd/mm/yyyy) ")
         if (new Date(req.body.date).getFullYear() > new Date().getFullYear()) throw new Error("Measure date can't be in the feauture ! ")
-
-        const [month, day, year] = new Date(req.body.date).toLocaleDateString().split("/")
-        const date = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`
         let sqlQuery = "insert into measures (user_id,date,syst_high,dias_low,pulse) Values (?,?,?,?,?)";
-        let queryValues = [+req.params.userId, date, +req.body.syst, +req.body.dias, +req.body.pulse]
+        let queryValues = [+req.params.userId, req.body.date, +req.body.syst, +req.body.dias, +req.body.pulse]
         const [data] = await pool.query(sqlQuery, queryValues)
 
         req.measureId = data.insertId;
@@ -100,17 +97,16 @@ async function getAllMeasuresAvg(req, res, next) {
             queryValues.push(req.body.startDate, req.body.endDate)
         }
         const [measureData] = await pool.query(sqlQuery, queryValues)
-
         let totalCrits = 0
         measureData.forEach(measure => {
             measure.critical = false
-            if (+measure.syst_high > +avgData[0].syst_avg * 1.2) {
+            if (+measure.syst_high > +avgData[0].syst_avg * 1.2 || +measure.syst_high < +avgData[0].syst_avg * 0.8) {
                 measure.critical = true
             }
-            if (+measure.dias_low > +avgData[0].dias_avg * 1.2) {
+            if (+measure.dias_low > +avgData[0].dias_avg * 1.2 || +measure.dias_low < +avgData[0].dias_avg * 0.8) {
                 measure.critical = true
             }
-            if (+measure.pulse > +avgData[0].pulse_avg * 1.2) {
+            if (+measure.pulse > +avgData[0].pulse_avg * 1.2 || +measure.pulse < +avgData[0].pulse_avg * 0.8) {
                 measure.critical = true
             }
             totalCrits += measure.critical ? 1 : 0
@@ -164,7 +160,6 @@ async function updateMeasure(req, res, next) {
         let sqlQuery = "update measures set syst_high=?, dias_low=?, pulse=? where id = ?"
         let queryValues = [+req.body.syst, +req.body.dias, +req.body.pulse, +req.params.measureId]
         const [data] = await pool.query(sqlQuery, queryValues)
-        console.log(data);
         if (!data.affectedRows) throw new Error("ID could not be found in the DB.")
         if (data.affectedRows && !data.changedRows) throw new Error("No changes detected, please provide new data to make the change.")
         next()
@@ -181,7 +176,6 @@ async function deleteMeasure(req, res, next) {
         let queryValues = [+req.params.measureId]
         const [data] = await pool.query(sqlQuery, queryValues)
         if (!data.affectedRows) throw new Error('Could not find this user in the DB.')
-        console.log(data);
 
         next()
     } catch (error) {
