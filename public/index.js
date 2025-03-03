@@ -477,6 +477,7 @@ const handleCreateMeasure = async (e) => {
     setTimeout(() => {
         document.querySelector('.success').innerHTML = ""
     }, 3000)
+    handleMeasureAvgTable()
     e.target.reset()
 }
 const handleUpdateMeasure = async (measureId) => {
@@ -534,10 +535,6 @@ const handleEditMeasure = (id) => {
 }
 const handleDeleteMeasure = async (measureId) => {
     const data = await deleteMeasure(measureId)
-    document.querySelector('.search-success').innerHTML = data.message
-    setTimeout(() => {
-        document.querySelector('.search-success').innerHTML = ''
-    }, 3000)
     handleMeasureAvgTable()
 }
 const handleMeasureAvgTable = async (aborted = false) => {
@@ -563,7 +560,6 @@ const handleMeasureAvgTable = async (aborted = false) => {
     const table = document.querySelector("#measure-tb")
     let markup = ""
     if (!window?.measures?.fail) {
-
         window.measures.measureData.forEach(measure => {
             markup += `<tr id="mid-${measure.id}" class="${measure.critical ? "crit" : ""} ">
                                 <td>${measure.id}</td>
@@ -584,8 +580,9 @@ const handleMeasureAvgTable = async (aborted = false) => {
                                 </td>
                             </tr>`
         })
-
-        document.querySelector('.search-success').innerHTML = `Found ${window.measures.totalCrits} critical measures out of ${window.measures.measureData.length}`
+        document.querySelector('.search-success').innerHTML = `Crits: ${window.measures.totalCrits}/${window.measures.measureData.length} || Avgs: Sys ${window.measures.avgData.syst_avg}, Dia ${window.measures.avgData.dias_avg}, Pul ${window.measures.avgData.pulse_avg}`
+    } else {
+        document.querySelector('.search-success').innerHTML = ``
     }
     table.innerHTML = ""
     table.insertAdjacentHTML("afterbegin", markup)
