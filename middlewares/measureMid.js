@@ -3,6 +3,7 @@ const { isBefore, isSameDay, isDate } = require('date-fns')
 async function createMeasure(req, res, next) {
     try {
         if (!req.params.userId) throw new Error("ID required!.")
+        if (!req.params.userId || isNaN(+req.params.userId)) throw new Error("User ID required and must be number!.")
         if (!req.body.syst || isNaN(+req.body.syst) || +req.body.syst < 0) throw new Error("Systolic must be provided and needs to be a positive number")
         if (!req.body.dias || isNaN(+req.body.dias) || +req.body.dias < 0) throw new Error("Diastolic must be provided and needs to be a positive number")
         if (!req.body.pulse || isNaN(+req.body.pulse) || +req.body.pulse < 0) throw new Error("Pulse must be provided and needs to be a positive number")
@@ -21,7 +22,7 @@ async function createMeasure(req, res, next) {
 
 async function getMeasure(req, res, next) {
     try {
-        if (!req.params.measureId) throw new Error("ID required!.")
+        if (!req.params.measureId || isNaN(+req.params.measureId)) throw new Error("Measure ID required and must be number!.")
         let sqlQuery = "select * from measures where id=?";
         let queryValues = [req.params.measureId]
         const [data] = await pool.query(sqlQuery, queryValues)
@@ -79,6 +80,7 @@ async function getAvgByMonth(req, res, next) {
 }
 async function getAllMeasuresAvg(req, res, next) {
     try {
+        if (!req.params.userId || isNaN(+req.params.userId)) throw new Error("User ID required and must be number!.")
         let sqlQuery = "select user_id,avg(syst_high) as syst_avg,avg(dias_low) as dias_avg ,avg(pulse) as pulse_avg from measures where user_id = ?"
         let queryValues = [req.params.userId]
         if (req.body.startDate && req.body.endDate && (isBefore(req.body.startDate, req.body.endDate) || isSameDay(req.body.endDate, req.body.startDate))) {
@@ -133,7 +135,7 @@ async function getAllMeasures(req, res, next) {
 
 async function getAllMeasuresById(req, res, next) {
     try {
-        if (!req.params.userId) throw new Error("ID required!.")
+        if (!req.params.userId || isNaN(+req.params.userId)) throw new Error("User ID required and must be number!.")
         let sqlQuery = "select * from measures where user_id=?";
         let queryValues = [req.params.userId]
         if (req.body.startDate && req.body.endDate && (isBefore(req.body.startDate, req.body.endDate) || isSameDay(req.body.endDate, req.body.startDate))) {

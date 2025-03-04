@@ -19,7 +19,7 @@ async function createUser(req, res, next) {
 
 async function getUser(req, res, next) {
     try {
-        if (!req.params.id) throw new Error("ID required!.")
+        if (!req.params.id || isNaN(+req.params.id)) throw new Error("ID required and must be number!.")
         let sqlQuery = "select * from users where id=?";
         let queryValues = [req.params.id]
         const [data] = await pool.query(sqlQuery, queryValues)
@@ -43,7 +43,7 @@ async function getAllUsers(req, res, next) {
 
 async function updateUser(req, res, next) {
     try {
-        if (!req.params.id) throw new Error("ID required!.")
+        if (!req.params.id || isNaN(+req.params.id)) throw new Error("ID required and must be number!.")
         if (!req.body.fullName || req.body.fullName.split(' ').length < 2 || req.body.fullName.split(' ')[0] == "" || req.body.fullName.split(' ')[1] == "") throw new Error("Name is not allowed to be empty, you must provide name with minimun of Two letters, make sure to provide full name (two words only).")
         let sqlQuery = "update users set full_name = ? where id = ?";
         let queryValues = [req.body.fullName.trim(), req.params.id]
@@ -59,7 +59,7 @@ async function updateUser(req, res, next) {
 
 async function deleteUser(req, res, next) {
     try {
-        if (!req.params.id) throw new Error("ID required!.")
+        if (!req.params.id || isNaN(+req.params.id)) throw new Error("ID required and must be number!.")
         let sqlQuery = "Delete from users where id = ?";
         let queryValues = [req.params.id]
         const [data] = await pool.query(sqlQuery, queryValues)
