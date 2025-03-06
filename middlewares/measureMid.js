@@ -49,19 +49,24 @@ async function getAvgByMonth(req, res, next) {
         if (!measuresAvg.length) throw new Error("Could not get the measures avg.")
 
         measuresAvg.forEach(avg => {
+            let totalCrits = 0
             measures.forEach(measure => {
                 if (measure.user_id === avg.user_id) {
                     if (+measure.syst_high >= +avg.syst_avg * 1.2 || +measure.syst_high <= +avg.syst_avg * 0.8) {
                         avg.systCnt = avg.systCnt ? avg.systCnt + 1 : 1
+                        totalCrits++;
                     }
                     if (+measure.dias_low >= +avg.dias_avg * 1.2 || +measure.dias_low <= +avg.dias_avg * 0.8) {
                         avg.diasCnt = avg.diasCnt ? avg.diasCnt + 1 : 1
+                        totalCrits++;
                     }
                     if (+measure.pulse >= +avg.pulse_avg * 1.2 || +measure.pulse <= +avg.pulse_avg * 0.8) {
                         avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt + 1 : 1
+                        totalCrits++;
                     }
                 }
             })
+            avg.totalCrits = totalCrits;
             req.allUsers.forEach(user => {
                 if (avg.user_id === user.id) {
                     avg.userName = user.full_name

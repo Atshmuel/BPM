@@ -668,6 +668,7 @@ const handleMeasuresByMonth = async (e) => {
 const showMonthsTable = (measuresAvg) => {
     const table = document.querySelector('#measure-tb')
     let markup = ""
+
     measuresAvg.forEach(avg => {
         markup += `
                     <tr >
@@ -675,6 +676,7 @@ const showMonthsTable = (measuresAvg) => {
                      <td>${avg.syst_avg} (${avg.systCnt || 0})</td>
                      <td>${avg.dias_avg} (${avg.diasCnt || 0})</td>
                      <td>${avg.pulse_avg} (${avg.pulseCnt || 0})</td>
+                     <td>${avg.totalCrits}</td>
                     </tr> 
         `
     })
